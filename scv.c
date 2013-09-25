@@ -58,10 +58,17 @@ static int scv_i_grow(struct scv_vector *p, size_t capacity)
 	return 1;
 }
 
-int scv_init(struct scv_vector *p, size_t objsize, size_t capacity)
+struct scv_vector *scv_new(size_t objsize, size_t capacity)
 {
-	assert(p != NULL);
+	struct scv_vector *p;
+
 	assert(objsize > 0);
+
+	p = malloc(sizeof *p);
+
+	if (p == NULL) {
+		return NULL;
+	}
 
 	/* minimum capacity is 64 bytes or 1 element */
 	if (capacity * objsize < 64) {
@@ -71,28 +78,26 @@ int scv_init(struct scv_vector *p, size_t objsize, size_t capacity)
 	p->data = malloc(capacity * objsize);
 
 	if (p->data == NULL) {
-		return 0;
+		free(p);
+		return NULL;
 	}
 
 	p->objsize = objsize;
 	p->size = 0;
 	p->capacity = capacity;
 
-	return 1;
+	return p;
 }
 
-void scv_free(struct scv_vector *p)
+void scv_delete(struct scv_vector *p)
 {
 	assert(p != NULL);
 
 	if (p->data != NULL) {
 		free(p->data);
-		p->data = NULL;
 	}
 
-	p->objsize = 0;
-	p->size = 0;
-	p->capacity = 0;
+	free(p);
 }
 
 size_t scv_objsize(const struct scv_vector *p)

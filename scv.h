@@ -35,23 +35,22 @@ struct scv_vector {
 };
 
 /**
- * Initialize `scv_vector`.
+ * Create new `scv_vector`.
  *
  * `capacity` is in number of elements.
  *
- * @param p pointer to `scv_vector`.
  * @param objsize size of each element in bytes.
  * @param capacity initial capacity in number of elements.
- * @return non-zero on success, zero on error.
+ * @return pointer to `scv_vector`, `NULL` on error.
  */
-int scv_init(struct scv_vector *p, size_t objsize, size_t capacity);
+struct scv_vector *scv_new(size_t objsize, size_t capacity);
 
 /**
- * Free `scv_vector`.
+ * Delete `scv_vector`.
  *
  * @param p pointer to `scv_vector`.
  */
-void scv_free(struct scv_vector *p);
+void scv_delete(struct scv_vector *p);
 
 /**
  * Return size of each element in `scv_vector`.
