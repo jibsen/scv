@@ -95,21 +95,28 @@ void scv_free(struct scv_vector *p)
 	p->capacity = 0;
 }
 
-size_t scv_size(struct scv_vector *p)
+size_t scv_objsize(const struct scv_vector *p)
+{
+	assert(p != NULL);
+
+	return p->objsize;
+}
+
+size_t scv_size(const struct scv_vector *p)
 {
 	assert(p != NULL);
 
 	return p->size;
 }
 
-int scv_empty(struct scv_vector *p)
+int scv_empty(const struct scv_vector *p)
 {
 	assert(p != NULL);
 
 	return p->size == 0;
 }
 
-size_t scv_capacity(struct scv_vector *p)
+size_t scv_capacity(const struct scv_vector *p)
 {
 	assert(p != NULL);
 
@@ -182,6 +189,39 @@ int scv_resize(struct scv_vector *p, size_t size)
 	}
 
 	p->size = size;
+
+	return 1;
+}
+
+int scv_copy(struct scv_vector *dst, const struct scv_vector *src)
+{
+	assert(dst != NULL);
+	assert(dst->data != NULL);
+	assert(src != NULL);
+	assert(src->data != NULL);
+	assert(dst->objsize == src->objsize);
+
+	if (!scv_resize(dst, 0)) {
+		return 0;
+	}
+
+	if (!scv_insert(dst, src->data, src->size, 0)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2)
+{
+	struct scv_vector tmp;
+
+	assert(scv1 != NULL);
+	assert(scv2 != NULL);
+
+	tmp = *scv1;
+	*scv1 = *scv2;
+	*scv2 = tmp;
 
 	return 1;
 }

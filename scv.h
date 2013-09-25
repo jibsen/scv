@@ -54,12 +54,20 @@ int scv_init(struct scv_vector *p, size_t objsize, size_t capacity);
 void scv_free(struct scv_vector *p);
 
 /**
+ * Return size of each element in `scv_vector`.
+ *
+ * @param p pointer to `scv_vector`.
+ * @return size of each element in bytes.
+ */
+size_t scv_objsize(const struct scv_vector *p);
+
+/**
  * Return size of `scv_vector`.
  *
  * @param p pointer to `scv_vector`.
  * @return size in number of elements.
  */
-size_t scv_size(struct scv_vector *p);
+size_t scv_size(const struct scv_vector *p);
 
 /**
  * Check if `scv_vector` is empty.
@@ -67,7 +75,7 @@ size_t scv_size(struct scv_vector *p);
  * @param p pointer to `scv_vector`.
  * @return non-zero if empty.
  */
-int scv_empty(struct scv_vector *p);
+int scv_empty(const struct scv_vector *p);
 
 /**
  * Return capacity of `scv_vector`.
@@ -75,7 +83,7 @@ int scv_empty(struct scv_vector *p);
  * @param p pointer to `scv_vector`.
  * @return capacity in number of elements.
  */
-size_t scv_capacity(struct scv_vector *p);
+size_t scv_capacity(const struct scv_vector *p);
 
 /**
  * Reserve space in `scv_vector`.
@@ -104,6 +112,24 @@ int scv_shrink_to_fit(struct scv_vector *p);
  * @return non-zero on success, zero on error.
  */
 int scv_resize(struct scv_vector *p, size_t size);
+
+/**
+ * Copy elements from `src` to `dst`.
+ *
+ * @param dst pointer to destination `scv_vector`.
+ * @param src pointer to source `scv_vector`.
+ * @return non-zero on success, zero on error.
+ */
+int scv_copy(struct scv_vector *dst, const struct scv_vector *src);
+
+/**
+ * Swap elements between `scv1` and `scv2`.
+ *
+ * @param scv1 pointer to `scv_vector`.
+ * @param scv2 pointer to `scv_vector`.
+ * @return non-zero on success, zero on error.
+ */
+int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
 
 /**
  * Return a pointer to element number `i`.
