@@ -140,6 +140,22 @@ int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
 void *scv_at(struct scv_vector *p, size_t i);
 
 /*
+ * Replace elements from `i` up to, but not including, `j` in `scv_vector`.
+ *
+ * If `data` is `NULL`, any inserted elements are not initialized.
+ *
+ * `j` can be `p->size`, in which case elements are added at the end.
+ *
+ * @param p pointer to `scv_vector`.
+ * @param i start index.
+ * @param j end index.
+ * @param data pointer to data to copy into new elements.
+ * @param nobj number of elements to insert.
+ * @return non-zero on success, zero on error.
+ */
+int scv_replace(struct scv_vector *p, size_t i, size_t j, const void *data, size_t nobj);
+
+/*
  * Insert `nobj` elements before element number `i` of `scv_vector`.
  *
  * If `data` is `NULL`, inserted elements are not initialized.

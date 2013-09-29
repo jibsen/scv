@@ -255,48 +255,40 @@ void *scv_at(struct scv_vector *p, size_t i)
 	return SCV_AT(p, i);
 }
 
-int scv_insert(struct scv_vector *p, size_t i, const void *data, size_t nobj)
+int scv_replace(struct scv_vector *p, size_t i, size_t j, const void *data, size_t nobj)
 {
 	assert(p != NULL);
 	assert(p->data != NULL);
-	assert(i <= p->size);
+	assert(i <= j);
+	assert(j <= p->size);
 
-	if (p->size + nobj > p->capacity) {
-		if (!scv_i_grow(p, p->size + nobj)) {
+	if (p->size - (j - i) + nobj > p->capacity) {
+		if (!scv_i_grow(p, p->size - (j - i) + nobj)) {
 			return 0;
 		}
 	}
 
-	if (i < p->size) {
-		memmove(SCV_AT(p, i + nobj), SCV_AT(p, i), (p->size - i) * p->objsize);
+	if (j < p->size) {
+		memmove(SCV_AT(p, i + nobj), SCV_AT(p, j), (p->size - j) * p->objsize);
 	}
 
-	if (data != NULL) {
+	if (data != NULL && nobj > 0) {
 		memcpy(SCV_AT(p, i), data, nobj * p->objsize);
 	}
 
-	p->size += nobj;
+	p->size = p->size - (j - i) + nobj;
 
 	return 1;
 }
 
+int scv_insert(struct scv_vector *p, size_t i, const void *data, size_t nobj)
+{
+	return scv_replace(p, i, i, data, nobj);
+}
+
 int scv_erase(struct scv_vector *p, size_t i, size_t j)
 {
-	assert(p != NULL);
-	assert(p->data != NULL);
-	assert(i < j);
-	assert(i < p->size);
-	assert(j <= p->size);
-
-	if (j == p->size) {
-		return scv_resize(p, i);
-	}
-
-	memmove(SCV_AT(p, i), SCV_AT(p, j), (p->size - j) * p->objsize);
-
-	p->size -= j - i;
-
-	return 1;
+	return scv_replace(p, i, j, NULL, 0);
 }
 
 int scv_push_back(struct scv_vector *p, const void *data)
