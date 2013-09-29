@@ -146,6 +146,8 @@ void *scv_at(struct scv_vector *p, size_t i);
  *
  * `j` can be `p->size`, in which case elements are added at the end.
  *
+ * `data` must not point inside `p`.
+ *
  * @param p pointer to `scv_vector`.
  * @param i start index.
  * @param j end index.
@@ -161,6 +163,8 @@ int scv_replace(struct scv_vector *p, size_t i, size_t j, const void *data, size
  * If `data` is `NULL`, inserted elements are not initialized.
  *
  * `i` can be `p->size`, in which case elements are added at the end.
+ *
+ * `data` must not point inside `p`.
  *
  * @param p pointer to `scv_vector`.
  * @param i index.
@@ -184,6 +188,8 @@ int scv_erase(struct scv_vector *p, size_t i, size_t j);
  * Insert element at end of `scv_vector`.
  *
  * If `data` is `NULL`, the inserted element is not initialized.
+ *
+ * `data` must not point inside `p`.
  *
  * @param p pointer to `scv_vector`.
  * @param data pointer to data to copy into new element.
