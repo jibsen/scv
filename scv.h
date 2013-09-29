@@ -159,7 +159,7 @@ int scv_insert(struct scv_vector *p, size_t i, const void *data, size_t nobj);
  *
  * @param p pointer to `scv_vector`.
  * @param i start index.
- * @param i end index.
+ * @param j end index.
  * @return non-zero on success, zero on error.
  */
 int scv_erase(struct scv_vector *p, size_t i, size_t j);
