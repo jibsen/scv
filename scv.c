@@ -39,8 +39,13 @@ static int scv_i_grow(struct scv_vector *p, size_t capacity)
 		return 1;
 	}
 
-	/* growth factor 1.5 */
-	newcapacity = p->capacity + p->capacity / 2 + 1;
+	/* growth factor 2 for small vectors, 1.5 for larger */
+	if (p->capacity < 4096 / p->objsize) {
+		newcapacity = p->capacity + p->capacity + 1;
+	}
+	else {
+		newcapacity = p->capacity + p->capacity / 2 + 1;
+	}
 
 	if (capacity > newcapacity) {
 		newcapacity = capacity;
