@@ -218,6 +218,7 @@ int scv_copy(struct scv_vector *dst, const struct scv_vector *src)
 	assert(dst->data != NULL);
 	assert(src != NULL);
 	assert(src->data != NULL);
+	assert(src != dst);
 	assert(dst->objsize == src->objsize);
 
 	return scv_replace(dst, 0, dst->size, src->data, src->size);
