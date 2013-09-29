@@ -221,15 +221,7 @@ int scv_copy(struct scv_vector *dst, const struct scv_vector *src)
 	assert(src->data != NULL);
 	assert(dst->objsize == src->objsize);
 
-	if (!scv_resize(dst, 0)) {
-		return 0;
-	}
-
-	if (!scv_insert(dst, src->data, src->size, 0)) {
-		return 0;
-	}
-
-	return 1;
+	return scv_replace(dst, 0, dst->size, src->data, src->size);
 }
 
 int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2)
