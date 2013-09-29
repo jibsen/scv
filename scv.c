@@ -43,7 +43,6 @@ static int scv_i_grow(struct scv_vector *p, size_t capacity)
 
 	assert(p != NULL);
 	assert(p->data != NULL);
-	assert(capacity > 0);
 
 	if (capacity <= p->capacity) {
 		return 1;
