@@ -255,7 +255,7 @@ void *scv_at(struct scv_vector *p, size_t i)
 	return SCV_AT(p, i);
 }
 
-int scv_insert(struct scv_vector *p, const void *data, size_t nobj, size_t i)
+int scv_insert(struct scv_vector *p, size_t i, const void *data, size_t nobj)
 {
 	assert(p != NULL);
 	assert(p->data != NULL);

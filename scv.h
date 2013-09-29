@@ -147,12 +147,12 @@ void *scv_at(struct scv_vector *p, size_t i);
  * `i` can be `p->size`, in which case elements are added at the end.
  *
  * @param p pointer to `scv_vector`.
+ * @param i index.
  * @param data pointer to data to copy into new elements.
  * @param nobj number of elements to insert.
- * @param i index.
  * @return non-zero on success, zero on error.
  */
-int scv_insert(struct scv_vector *p, const void *data, size_t nobj, size_t i);
+int scv_insert(struct scv_vector *p, size_t i, const void *data, size_t nobj);
 
 /*
  * Remove elements from `i` up to, but not including, `j` from `scv_vector`.
