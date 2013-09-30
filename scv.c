@@ -43,6 +43,7 @@ static int scv_i_grow(struct scv_vector *v, size_t capacity)
 
 	assert(v != NULL);
 	assert(v->data != NULL);
+	assert(capacity < (size_t) -1 / v->objsize);
 
 	if (capacity <= v->capacity) {
 		return 1;
@@ -77,6 +78,7 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 	struct scv_vector *v;
 
 	assert(objsize > 0);
+	assert(capacity < (size_t) -1 / objsize);
 
 	v = malloc(sizeof *v);
 
@@ -179,6 +181,7 @@ int scv_reserve(struct scv_vector *v, size_t capacity)
 
 	assert(v != NULL);
 	assert(v->data != NULL);
+	assert(capacity < (size_t) -1 / v->objsize);
 
 	if (capacity <= v->capacity) {
 		return 1;
@@ -200,6 +203,7 @@ int scv_resize(struct scv_vector *v, size_t size)
 {
 	assert(v != NULL);
 	assert(v->data != NULL);
+	assert(size < (size_t) -1 / v->objsize);
 
 	if (size > v->capacity) {
 		if (!scv_i_grow(v, size)) {
