@@ -32,7 +32,7 @@
  * If more space is needed, grow `scv_vector` to `capacity`, but at least by
  * a factor of 1.5.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param capacity requested capacity.
  * @return non-zero on success, zero on error.
  */
