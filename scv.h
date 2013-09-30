@@ -139,6 +139,22 @@ int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
  */
 void *scv_at(struct scv_vector *p, size_t i);
 
+/**
+ * Return a pointer to the first element of `p`.
+ *
+ * @param p pointer to `scv_vector`.
+ * @return pointer to first element.
+ */
+void *scv_front(struct scv_vector *p);
+
+/**
+ * Return a pointer to the last element of `p`.
+ *
+ * @param p pointer to `scv_vector`.
+ * @return pointer to last element.
+ */
+void *scv_back(struct scv_vector *p);
+
 /*
  * Replace elements from `i` up to, but not including, `j` in `scv_vector`.
  *

@@ -247,6 +247,24 @@ void *scv_at(struct scv_vector *p, size_t i)
 	return SCV_AT(p, i);
 }
 
+void *scv_front(struct scv_vector *p)
+{
+	assert(p != NULL);
+	assert(p->data != NULL);
+	assert(p->size > 0);
+
+	return p->data;
+}
+
+void *scv_back(struct scv_vector *p)
+{
+	assert(p != NULL);
+	assert(p->data != NULL);
+	assert(p->size > 0);
+
+	return SCV_AT(p, p->size - 1);
+}
+
 int scv_replace(struct scv_vector *p, size_t i, size_t j, const void *data, size_t nobj)
 {
 	assert(p != NULL);
