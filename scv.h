@@ -48,69 +48,69 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity);
 /**
  * Delete `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  */
-void scv_delete(struct scv_vector *p);
+void scv_delete(struct scv_vector *v);
 
 /**
  * Return size of each element in `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return size of each element in bytes.
  */
-size_t scv_objsize(const struct scv_vector *p);
+size_t scv_objsize(const struct scv_vector *v);
 
 /**
  * Return size of `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return size in number of elements.
  */
-size_t scv_size(const struct scv_vector *p);
+size_t scv_size(const struct scv_vector *v);
 
 /**
  * Check if `scv_vector` is empty.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return non-zero if empty.
  */
-int scv_empty(const struct scv_vector *p);
+int scv_empty(const struct scv_vector *v);
 
 /**
  * Return capacity of `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return capacity in number of elements.
  */
-size_t scv_capacity(const struct scv_vector *p);
+size_t scv_capacity(const struct scv_vector *v);
 
 /**
  * Reserve space in `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param capacity requested capacity.
  * @return non-zero on success, zero on error.
  */
-int scv_reserve(struct scv_vector *p, size_t capacity);
+int scv_reserve(struct scv_vector *v, size_t capacity);
 
 /**
  * Trim capacity of `scv_vector` to the number of elements used.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return non-zero on success, zero on error.
  */
-int scv_shrink_to_fit(struct scv_vector *p);
+int scv_shrink_to_fit(struct scv_vector *v);
 
 /**
  * Resize number of elements in `scv_vector`.
  *
  * Any new elements are uninitialized.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param size new size.
  * @return non-zero on success, zero on error.
  */
-int scv_resize(struct scv_vector *p, size_t size);
+int scv_resize(struct scv_vector *v, size_t size);
 
 /**
  * Copy elements from `src` to `dst`.
@@ -133,27 +133,27 @@ int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
 /**
  * Return a pointer to element number `i`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param i index.
  * @return pointer to element `i`.
  */
-void *scv_at(struct scv_vector *p, size_t i);
+void *scv_at(struct scv_vector *v, size_t i);
 
 /**
- * Return a pointer to the first element of `p`.
+ * Return a pointer to the first element of `v`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return pointer to first element.
  */
-void *scv_front(struct scv_vector *p);
+void *scv_front(struct scv_vector *v);
 
 /**
- * Return a pointer to the last element of `p`.
+ * Return a pointer to the last element of `v`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return pointer to last element.
  */
-void *scv_back(struct scv_vector *p);
+void *scv_back(struct scv_vector *v);
 
 /*
  * Replace elements from `i` up to, but not including, `j` in `scv_vector`.
@@ -162,16 +162,16 @@ void *scv_back(struct scv_vector *p);
  *
  * `j` can be `p->size`, in which case elements are added at the end.
  *
- * `data` must not point inside `p`.
+ * `data` must not point inside `v`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param i start index.
  * @param j end index.
  * @param data pointer to data to copy into new elements.
  * @param nobj number of elements to insert.
  * @return non-zero on success, zero on error.
  */
-int scv_replace(struct scv_vector *p, size_t i, size_t j, const void *data, size_t nobj);
+int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size_t nobj);
 
 /*
  * Insert `nobj` elements before element number `i` of `scv_vector`.
@@ -180,46 +180,46 @@ int scv_replace(struct scv_vector *p, size_t i, size_t j, const void *data, size
  *
  * `i` can be `p->size`, in which case elements are added at the end.
  *
- * `data` must not point inside `p`.
+ * `data` must not point inside `v`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param i index.
  * @param data pointer to data to copy into new elements.
  * @param nobj number of elements to insert.
  * @return non-zero on success, zero on error.
  */
-int scv_insert(struct scv_vector *p, size_t i, const void *data, size_t nobj);
+int scv_insert(struct scv_vector *v, size_t i, const void *data, size_t nobj);
 
 /*
  * Remove elements from `i` up to, but not including, `j` from `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param i start index.
  * @param j end index.
  * @return non-zero on success, zero on error.
  */
-int scv_erase(struct scv_vector *p, size_t i, size_t j);
+int scv_erase(struct scv_vector *v, size_t i, size_t j);
 
 /*
  * Insert element at end of `scv_vector`.
  *
  * If `data` is `NULL`, the inserted element is not initialized.
  *
- * `data` must not point inside `p`.
+ * `data` must not point inside `v`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @param data pointer to data to copy into new element.
  * @return non-zero on success, zero on error.
  */
-int scv_push_back(struct scv_vector *p, const void *data);
+int scv_push_back(struct scv_vector *v, const void *data);
 
 /*
  * Remove last element of `scv_vector`.
  *
- * @param p pointer to `scv_vector`.
+ * @param v pointer to `scv_vector`.
  * @return non-zero on success, zero on error.
  */
-int scv_pop_back(struct scv_vector *p);
+int scv_pop_back(struct scv_vector *v);
 
 #ifdef __cplusplus
 } /* extern "C" */
