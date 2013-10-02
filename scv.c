@@ -43,10 +43,15 @@ static int scv_i_grow(struct scv_vector *v, size_t capacity)
 
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(capacity < (size_t) -1 / v->objsize);
 
 	if (capacity <= v->capacity) {
 		return 1;
+	}
+
+	assert(v->objsize > 0);
+
+	if (capacity >= (size_t) -1 / v->objsize) {
+		return 0;
 	}
 
 	/* growth factor 2 for small vectors, 1.5 for larger */
@@ -57,7 +62,7 @@ static int scv_i_grow(struct scv_vector *v, size_t capacity)
 		newcapacity = v->capacity + v->capacity / 2 + 1;
 	}
 
-	if (capacity > newcapacity) {
+	if (capacity > newcapacity || newcapacity >= (size_t) -1 / v->objsize) {
 		newcapacity = capacity;
 	}
 
@@ -77,8 +82,9 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 {
 	struct scv_vector *v;
 
-	assert(objsize > 0);
-	assert(capacity < (size_t) -1 / objsize);
+	if (objsize == 0 || capacity >= (size_t) -1 / objsize) {
+		return NULL;
+	}
 
 	v = (struct scv_vector *) malloc(sizeof *v);
 
@@ -107,7 +113,9 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 
 void scv_delete(struct scv_vector *v)
 {
-	assert(v != NULL);
+	if (v == NULL) {
+		return;
+	}
 
 	if (v->data != NULL) {
 		free(v->data);
@@ -158,6 +166,8 @@ int scv_shrink_to_fit(struct scv_vector *v)
 
 	newcapacity = v->size;
 
+	assert(newcapacity < (size_t) -1 / v->objsize);
+
 	/* minimum capacity is 64 bytes or 1 element */
 	if (newcapacity * v->objsize < 64) {
 		newcapacity = (64 + (v->objsize - 1)) / v->objsize;
@@ -181,10 +191,15 @@ int scv_reserve(struct scv_vector *v, size_t capacity)
 
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(capacity < (size_t) -1 / v->objsize);
 
 	if (capacity <= v->capacity) {
 		return 1;
+	}
+
+	assert(v->objsize > 0);
+
+	if (capacity >= (size_t) -1 / v->objsize) {
+		return 0;
 	}
 
 	newdata = realloc(v->data, capacity * v->objsize);
@@ -203,7 +218,12 @@ int scv_resize(struct scv_vector *v, size_t size)
 {
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(size < (size_t) -1 / v->objsize);
+
+	assert(v->objsize > 0);
+
+	if (size >= (size_t) -1 / v->objsize) {
+		return 0;
+	}
 
 	if (size > v->capacity) {
 		if (!scv_i_grow(v, size)) {
@@ -222,8 +242,10 @@ int scv_copy(struct scv_vector *dst, const struct scv_vector *src)
 	assert(dst->data != NULL);
 	assert(src != NULL);
 	assert(src->data != NULL);
-	assert(src != dst);
-	assert(dst->objsize == src->objsize);
+
+	if (dst == src || dst->objsize != src->objsize) {
+		return 0;
+	}
 
 	return scv_replace(dst, 0, dst->size, src->data, src->size);
 }
@@ -246,7 +268,10 @@ void *scv_at(struct scv_vector *v, size_t i)
 {
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(i < v->size);
+
+	if (i >= v->size) {
+		return NULL;
+	}
 
 	return SCV_AT(v, i);
 }
@@ -255,7 +280,10 @@ void *scv_front(struct scv_vector *v)
 {
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(v->size > 0);
+
+	if (v->size == 0) {
+		return NULL;
+	}
 
 	return v->data;
 }
@@ -264,7 +292,10 @@ void *scv_back(struct scv_vector *v)
 {
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(v->size > 0);
+
+	if (v->size == 0) {
+		return NULL;
+	}
 
 	return SCV_AT(v, v->size - 1);
 }
@@ -273,8 +304,16 @@ int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size
 {
 	assert(v != NULL);
 	assert(v->data != NULL);
-	assert(i <= j);
-	assert(j <= v->size);
+
+	if (i > j || j > v->size) {
+		return 0;
+	}
+
+	assert(v->objsize > 0);
+
+	if (nobj >= (size_t) -1 / v->objsize - (v->size - (j - i))) {
+		return 0;
+	}
 
 	if (v->size - (j - i) + nobj > v->capacity) {
 		if (!scv_i_grow(v, v->size - (j - i) + nobj)) {
