@@ -80,7 +80,7 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 	assert(objsize > 0);
 	assert(capacity < (size_t) -1 / objsize);
 
-	v = malloc(sizeof *v);
+	v = (struct scv_vector *) malloc(sizeof *v);
 
 	if (v == NULL) {
 		return NULL;
