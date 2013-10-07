@@ -82,6 +82,10 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 {
 	struct scv_vector *v;
 
+	if (capacity == 0) {
+		capacity = 1;
+	}
+
 	if (objsize == 0 || capacity >= (size_t) -1 / objsize) {
 		return NULL;
 	}
