@@ -155,7 +155,7 @@ void *scv_front(struct scv_vector *v);
  */
 void *scv_back(struct scv_vector *v);
 
-/*
+/**
  * Replace elements from `i` up to, but not including, `j` in `scv_vector`.
  *
  * If `data` is `NULL`, any inserted elements are not initialized.
@@ -173,7 +173,7 @@ void *scv_back(struct scv_vector *v);
  */
 int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size_t nobj);
 
-/*
+/**
  * Insert `nobj` elements before element number `i` of `scv_vector`.
  *
  * If `data` is `NULL`, inserted elements are not initialized.
@@ -190,7 +190,7 @@ int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size
  */
 int scv_insert(struct scv_vector *v, size_t i, const void *data, size_t nobj);
 
-/*
+/**
  * Remove elements from `i` up to, but not including, `j` from `scv_vector`.
  *
  * @param v pointer to `scv_vector`.
@@ -200,7 +200,7 @@ int scv_insert(struct scv_vector *v, size_t i, const void *data, size_t nobj);
  */
 int scv_erase(struct scv_vector *v, size_t i, size_t j);
 
-/*
+/**
  * Insert element at end of `scv_vector`.
  *
  * If `data` is `NULL`, the inserted element is not initialized.
@@ -213,7 +213,7 @@ int scv_erase(struct scv_vector *v, size_t i, size_t j);
  */
 int scv_push_back(struct scv_vector *v, const void *data);
 
-/*
+/**
  * Remove last element of `scv_vector`.
  *
  * @param v pointer to `scv_vector`.
