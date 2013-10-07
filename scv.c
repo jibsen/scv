@@ -152,6 +152,35 @@ size_t scv_capacity(const struct scv_vector *v)
 	return v->capacity;
 }
 
+int scv_reserve(struct scv_vector *v, size_t capacity)
+{
+	void *newdata;
+
+	assert(v != NULL);
+	assert(v->data != NULL);
+
+	if (capacity <= v->capacity) {
+		return 1;
+	}
+
+	assert(v->objsize > 0);
+
+	if (capacity >= (size_t) -1 / v->objsize) {
+		return 0;
+	}
+
+	newdata = realloc(v->data, capacity * v->objsize);
+
+	if (newdata == NULL) {
+		return 0;
+	}
+
+	v->data = newdata;
+	v->capacity = capacity;
+
+	return 1;
+}
+
 int scv_shrink_to_fit(struct scv_vector *v)
 {
 	void *newdata;
@@ -181,35 +210,6 @@ int scv_shrink_to_fit(struct scv_vector *v)
 
 	v->data = newdata;
 	v->capacity = newcapacity;
-
-	return 1;
-}
-
-int scv_reserve(struct scv_vector *v, size_t capacity)
-{
-	void *newdata;
-
-	assert(v != NULL);
-	assert(v->data != NULL);
-
-	if (capacity <= v->capacity) {
-		return 1;
-	}
-
-	assert(v->objsize > 0);
-
-	if (capacity >= (size_t) -1 / v->objsize) {
-		return 0;
-	}
-
-	newdata = realloc(v->data, capacity * v->objsize);
-
-	if (newdata == NULL) {
-		return 0;
-	}
-
-	v->data = newdata;
-	v->capacity = capacity;
 
 	return 1;
 }
