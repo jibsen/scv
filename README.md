@@ -36,48 +36,50 @@ Example
 Here is a simple example that reads integer coordinates in the form `x,y`
 into a `scv_vector` and prints them in lexicographical order:
 
-```C
-#include <stdlib.h>
-#include <stdio.h>
+    #include <stdlib.h>
+    #include <stdio.h>
 
-#include "scv.h"
+    #include "scv.h"
 
-struct point {
-	int x;
-	int y;
-};
+    struct point {
+        int x;
+        int y;
+    };
 
-int point_compare(const struct point *lhs, const struct point *rhs)
-{
-	if (lhs->x == rhs->x) {
-		return lhs->y - rhs->y;
-	}
+    int point_compare(const struct point *lhs, const struct point *rhs)
+    {
+        if (lhs->x == rhs->x) {
+            return lhs->y - rhs->y;
+        }
 
-	return lhs->x - rhs->x;
-}
+        return lhs->x - rhs->x;
+    }
 
-int main(void)
-{
-	struct scv_vector *v;
-	struct point p;
-	size_t i;
+    int main(void)
+    {
+        struct scv_vector *v;
+        struct point p;
+        size_t i;
 
-	v = scv_new(sizeof p, 10);
+        /* create a scv_vector of points, reserving space for 10 */
+        v = scv_new(sizeof p, 10);
 
-	while (scanf("%d,%d", &p.x, &p.y) == 2) {
-		scv_push_back(v, &p);
-	}
+        /* read coordinates into p and append to v */
+        while (scanf("%d,%d", &p.x, &p.y) == 2) {
+            scv_push_back(v, &p);
+        }
 
-	qsort(scv_front(v), scv_size(v), scv_objsize(v), point_compare);
+        /* sort points in v */
+        qsort(scv_front(v), scv_size(v), scv_objsize(v), point_compare);
 
-	for (i = 0; i < scv_size(v); ++i) {
-		struct point *pp = scv_at(v, i);
+        /* print points */
+        for (i = 0; i < scv_size(v); ++i) {
+            struct point *pp = scv_at(v, i);
 
-		printf("%d,%d\n", pp->x, pp->y);
-	}
+            printf("%d,%d\n", pp->x, pp->y);
+        }
 
-	scv_delete(v);
+        scv_delete(v);
 
-	return 0;
-}
-```
+        return 0;
+    }
