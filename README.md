@@ -23,6 +23,17 @@ This has the minor drawback that you cannot use a constant expression
 directly, but need an actual object that you can pass a pointer to, when
 calling functions like `scv_push_back()`.
 
+Pointers into the memory used to hold the elements of a `scv_vector`, will be
+valid until a function causes a reallocation. So if you know the element
+type, and speed is important, you can use pointers to access the elements
+directly:
+
+    /* v is a scv_vector of int, get a pointer to it's data */
+    int *p = scv_front(v);
+
+    /* we can access the elements of v using p */
+    p[5] = 42;
+
 scv uses `malloc()` for memory allocation, which works reasonably well in
 many cases, but if needed, you can improve performance by using a custom
 allocator.
