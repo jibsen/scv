@@ -135,7 +135,7 @@ int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
  *
  * @param v pointer to `scv_vector`.
  * @param i index.
- * @return pointer to element `i`.
+ * @return pointer to element `i`, `NULL` on error.
  */
 void *scv_at(struct scv_vector *v, size_t i);
 
@@ -143,7 +143,7 @@ void *scv_at(struct scv_vector *v, size_t i);
  * Return a pointer to the first element of `v`.
  *
  * @param v pointer to `scv_vector`.
- * @return pointer to first element.
+ * @return pointer to first element, `NULL` on error.
  */
 void *scv_front(struct scv_vector *v);
 
@@ -151,7 +151,7 @@ void *scv_front(struct scv_vector *v);
  * Return a pointer to the last element of `v`.
  *
  * @param v pointer to `scv_vector`.
- * @return pointer to last element.
+ * @return pointer to last element, `NULL` on error.
  */
 void *scv_back(struct scv_vector *v);
 
