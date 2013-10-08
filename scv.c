@@ -325,7 +325,7 @@ int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size
 		}
 	}
 
-	if (j < v->size) {
+	if (j < v->size && i + nobj != j) {
 		memmove(SCV_AT(v, i + nobj), SCV_AT(v, j), (v->size - j) * v->objsize);
 	}
 
