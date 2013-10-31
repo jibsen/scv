@@ -202,7 +202,7 @@ int scv_insert(struct scv_vector *v, size_t i, const void *data, size_t nobj);
 int scv_erase(struct scv_vector *v, size_t i, size_t j);
 
 /**
- * Insert element from `data` at end of `v`.
+ * Insert single element from `data` at end of `v`.
  *
  * If `data` is `NULL`, the inserted element is not initialized.
  *
