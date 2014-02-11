@@ -123,7 +123,12 @@ void scv_delete(struct scv_vector *v)
 
 	if (v->data != NULL) {
 		free(v->data);
+		v->data = NULL;
 	}
+
+	v->objsize = 0;
+	v->size = 0;
+	v->capacity = 0;
 
 	free(v);
 }
