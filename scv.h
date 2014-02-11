@@ -3,7 +3,7 @@
  *
  * scv.h
  *
- * Copyright 2003-2013 Joergen Ibsen
+ * Copyright 2003-2014 Joergen Ibsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

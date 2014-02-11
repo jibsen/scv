@@ -2,7 +2,7 @@
 Simple C Vector
 ===============
 
-Copyright 2003-2013 Joergen Ibsen
+Copyright 2003-2014 Joergen Ibsen
 
 <http://www.ibsensoftware.com/>
 
