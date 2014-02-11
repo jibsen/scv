@@ -26,6 +26,9 @@
 
 #define SCV_AT(v, i) ((void *) ((char *) (v)->data + (i) * (v)->objsize))
 
+/* minimum allocation size in bytes */
+#define SCV_MIN_ALLOC (64u)
+
 /**
  * Grow capacity to reserve space in `scv_vector`.
  *
@@ -96,9 +99,9 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 		return NULL;
 	}
 
-	/* minimum capacity is 64 bytes or 1 element */
-	if (capacity * objsize < 64) {
-		capacity = (64 + (objsize - 1)) / objsize;
+	/* minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
+	if (capacity * objsize < SCV_MIN_ALLOC) {
+		capacity = (SCV_MIN_ALLOC + (objsize - 1)) / objsize;
 	}
 
 	v->data = malloc(capacity * objsize);
@@ -206,9 +209,9 @@ int scv_shrink_to_fit(struct scv_vector *v)
 
 	assert(newcapacity < (size_t) -1 / v->objsize);
 
-	/* minimum capacity is 64 bytes or 1 element */
-	if (newcapacity * v->objsize < 64) {
-		newcapacity = (64 + (v->objsize - 1)) / v->objsize;
+	/* minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
+	if (newcapacity * v->objsize < SCV_MIN_ALLOC) {
+		newcapacity = (SCV_MIN_ALLOC + (v->objsize - 1)) / v->objsize;
 	}
 
 	newdata = realloc(v->data, newcapacity * v->objsize);
