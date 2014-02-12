@@ -161,7 +161,7 @@ void *scv_back(struct scv_vector *v);
  *
  * If `data` is `NULL`, any inserted elements are not initialized.
  *
- * `j` can be `p->size`, in which case elements are added at the end.
+ * `i` can be `p->size`, in which case elements are added at the end.
  *
  * `data` must not point inside `v`.
  *
