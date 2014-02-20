@@ -68,7 +68,7 @@ int main(void)
     }
 
     /* sort points in v */
-    qsort(scv_front(v), scv_size(v), scv_objsize(v), point_compare);
+    qsort(scv_data(v), scv_size(v), scv_objsize(v), point_compare);
 
     /* print points */
     for (i = 0; i < scv_size(v); ++i) {
