@@ -324,6 +324,16 @@ void *scv_data(struct scv_vector *v)
 	return v->data;
 }
 
+int scv_clear(struct scv_vector *v)
+{
+	assert(v != NULL);
+	assert(v->data != NULL);
+
+	v->size = 0;
+
+	return 1;
+}
+
 int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size_t nobj)
 {
 	assert(v != NULL);

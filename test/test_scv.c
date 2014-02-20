@@ -796,6 +796,42 @@ TEST data_empty(void)
 	PASS();
 }
 
+/* scv_clear */
+
+TEST clear_nonempty(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	scv_insert(v, 0, NULL, 5);
+
+	res = scv_clear(v);
+
+	ASSERT(res && scv_size(v) == 0 && scv_capacity(v) == 25);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST clear_empty(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_clear(v);
+
+	ASSERT(res && scv_size(v) == 0 && scv_capacity(v) == 25);
+
+	scv_delete(v);
+
+	PASS();
+}
+
 /* scv_replace */
 
 TEST replace_empty_vector(void)
@@ -1699,6 +1735,9 @@ SUITE(scv)
 
 	RUN_TEST(data_nonempty);
 	RUN_TEST(data_empty);
+
+	RUN_TEST(clear_nonempty);
+	RUN_TEST(clear_empty);
 
 	RUN_TEST(replace_empty_vector);
 	RUN_TEST(replace_empty_range_start);

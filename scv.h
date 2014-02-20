@@ -164,6 +164,14 @@ void *scv_back(struct scv_vector *v);
 void *scv_data(struct scv_vector *v);
 
 /**
+ * Remove all elements from `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return non-zero on success, zero on error.
+ */
+int scv_clear(struct scv_vector *v);
+
+/**
  * Replace elements from `i` up to, but not including, `j` in `v`, with
  * `nobj` elements from `data`.
  *
