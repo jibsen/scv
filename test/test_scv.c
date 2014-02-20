@@ -760,6 +760,42 @@ TEST back_empty(void)
 	PASS();
 }
 
+/* scv_data */
+
+TEST data_nonempty(void)
+{
+	struct scv_vector *v;
+	int *p;
+
+	v = scv_new(sizeof(int), 25);
+
+	scv_insert(v, 0, NULL, 5);
+
+	p = scv_data(v);
+
+	ASSERT(p != NULL && p == (int *) v->data);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST data_empty(void)
+{
+	struct scv_vector *v;
+	int *p;
+
+	v = scv_new(sizeof(int), 25);
+
+	p = scv_data(v);
+
+	ASSERT(p == NULL);
+
+	scv_delete(v);
+
+	PASS();
+}
+
 /* scv_replace */
 
 TEST replace_empty_vector(void)
@@ -1660,6 +1696,9 @@ SUITE(scv)
 	RUN_TEST(back_nonempty);
 	RUN_TEST(back_single);
 	RUN_TEST(back_empty);
+
+	RUN_TEST(data_nonempty);
+	RUN_TEST(data_empty);
 
 	RUN_TEST(replace_empty_vector);
 	RUN_TEST(replace_empty_range_start);

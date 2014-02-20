@@ -156,6 +156,14 @@ void *scv_front(struct scv_vector *v);
 void *scv_back(struct scv_vector *v);
 
 /**
+ * Return a pointer to the elements of `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return pointer to elements, `NULL` if empty.
+ */
+void *scv_data(struct scv_vector *v);
+
+/**
  * Replace elements from `i` up to, but not including, `j` in `v`, with
  * `nobj` elements from `data`.
  *
