@@ -53,84 +53,6 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity);
 void scv_delete(struct scv_vector *v);
 
 /**
- * Return size of each element in `v`.
- *
- * @param v pointer to `scv_vector`.
- * @return size of each element in bytes.
- */
-size_t scv_objsize(const struct scv_vector *v);
-
-/**
- * Return size of `v`.
- *
- * @param v pointer to `scv_vector`.
- * @return size in number of elements.
- */
-size_t scv_size(const struct scv_vector *v);
-
-/**
- * Check if `v` is empty.
- *
- * @param v pointer to `scv_vector`.
- * @return non-zero if empty.
- */
-int scv_empty(const struct scv_vector *v);
-
-/**
- * Return capacity of `v`.
- *
- * @param v pointer to `scv_vector`.
- * @return capacity in number of elements.
- */
-size_t scv_capacity(const struct scv_vector *v);
-
-/**
- * Reserve space in `v`.
- *
- * @param v pointer to `scv_vector`.
- * @param capacity requested capacity.
- * @return non-zero on success, zero on error.
- */
-int scv_reserve(struct scv_vector *v, size_t capacity);
-
-/**
- * Trim capacity of `v` to the number of elements used.
- *
- * @param v pointer to `scv_vector`.
- * @return non-zero on success, zero on error.
- */
-int scv_shrink_to_fit(struct scv_vector *v);
-
-/**
- * Resize number of elements in `v`.
- *
- * Any new elements are uninitialized.
- *
- * @param v pointer to `scv_vector`.
- * @param size new size.
- * @return non-zero on success, zero on error.
- */
-int scv_resize(struct scv_vector *v, size_t size);
-
-/**
- * Copy elements from `src` to `dst`.
- *
- * @param dst pointer to destination `scv_vector`.
- * @param src pointer to source `scv_vector`.
- * @return non-zero on success, zero on error.
- */
-int scv_copy(struct scv_vector *dst, const struct scv_vector *src);
-
-/**
- * Swap elements between `scv1` and `scv2`.
- *
- * @param scv1 pointer to `scv_vector`.
- * @param scv2 pointer to `scv_vector`.
- * @return non-zero on success, zero on error.
- */
-int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
-
-/**
  * Return a pointer to element number `i` of `v`.
  *
  * @param v pointer to `scv_vector`.
@@ -162,6 +84,55 @@ void *scv_back(struct scv_vector *v);
  * @return pointer to elements, `NULL` if empty.
  */
 void *scv_data(struct scv_vector *v);
+
+/**
+ * Check if `v` is empty.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return non-zero if empty.
+ */
+int scv_empty(const struct scv_vector *v);
+
+/**
+ * Return size of `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return size in number of elements.
+ */
+size_t scv_size(const struct scv_vector *v);
+
+/**
+ * Return size of each element in `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return size of each element in bytes.
+ */
+size_t scv_objsize(const struct scv_vector *v);
+
+/**
+ * Reserve space in `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @param capacity requested capacity.
+ * @return non-zero on success, zero on error.
+ */
+int scv_reserve(struct scv_vector *v, size_t capacity);
+
+/**
+ * Return capacity of `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return capacity in number of elements.
+ */
+size_t scv_capacity(const struct scv_vector *v);
+
+/**
+ * Trim capacity of `v` to the number of elements used.
+ *
+ * @param v pointer to `scv_vector`.
+ * @return non-zero on success, zero on error.
+ */
+int scv_shrink_to_fit(struct scv_vector *v);
 
 /**
  * Remove all elements from `v`.
@@ -237,6 +208,35 @@ int scv_push_back(struct scv_vector *v, const void *data);
  * @return non-zero on success, zero on error.
  */
 int scv_pop_back(struct scv_vector *v);
+
+/**
+ * Resize number of elements in `v`.
+ *
+ * Any new elements are uninitialized.
+ *
+ * @param v pointer to `scv_vector`.
+ * @param size new size.
+ * @return non-zero on success, zero on error.
+ */
+int scv_resize(struct scv_vector *v, size_t size);
+
+/**
+ * Copy elements from `src` to `dst`.
+ *
+ * @param dst pointer to destination `scv_vector`.
+ * @param src pointer to source `scv_vector`.
+ * @return non-zero on success, zero on error.
+ */
+int scv_copy(struct scv_vector *dst, const struct scv_vector *src);
+
+/**
+ * Swap elements between `scv1` and `scv2`.
+ *
+ * @param scv1 pointer to `scv_vector`.
+ * @param scv2 pointer to `scv_vector`.
+ * @return non-zero on success, zero on error.
+ */
+int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
 
 #ifdef __cplusplus
 } /* extern "C" */

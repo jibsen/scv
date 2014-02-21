@@ -111,511 +111,6 @@ TEST delete_null(void)
 	PASS();
 }
 
-/* scv_objsize */
-
-TEST objsize(void)
-{
-	struct scv_vector *v;
-
-	v = scv_new(3, 25);
-
-	ASSERT(v != NULL && scv_objsize(v) == 3);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_size */
-
-TEST size_empty(void)
-{
-	struct scv_vector *v;
-
-	v = scv_new(3, 25);
-
-	ASSERT(v != NULL && scv_size(v) == 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST size_nonempty(void)
-{
-	struct scv_vector *v;
-
-	v = scv_new(3, 25);
-
-	scv_resize(v, 10);
-
-	ASSERT(v != NULL && scv_size(v) == 10);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_empty */
-
-TEST empty_empty(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	res = scv_empty(v);
-
-	ASSERT(res != 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST empty_nonempty(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_resize(v, 1);
-
-	res = scv_empty(v);
-
-	ASSERT(res == 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_capacity */
-
-TEST capacity(void)
-{
-	struct scv_vector *v;
-
-	v = scv_new(3, 25);
-
-	ASSERT(v != NULL && scv_capacity(v) >= 25);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_reserve */
-
-TEST reserve_zero(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	res = scv_reserve(v, 0);
-
-	ASSERT(res && scv_capacity(v) == 100);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST reserve_below_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 120);
-
-	scv_resize(v, 100);
-
-	res = scv_reserve(v, 80);
-
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST reserve_equals_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 120);
-
-	scv_resize(v, 100);
-
-	res = scv_reserve(v, 100);
-
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST reserve_above_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 120);
-
-	scv_resize(v, 100);
-
-	res = scv_reserve(v, 110);
-
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST reserve_above_capacity(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 120);
-
-	scv_resize(v, 100);
-
-	res = scv_reserve(v, 140);
-
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 140);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST reserve_capacity_max(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	res = scv_reserve(v, (size_t) -1);
-
-	ASSERT(res == 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_shrink_to_fit */
-
-TEST shrink_to_fit_empty(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	res = scv_shrink_to_fit(v);
-
-	ASSERT(res && scv_capacity(v) > 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST shrink_to_fit_size_equals_capacity(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_resize(v, 100);
-
-	res = scv_shrink_to_fit(v);
-
-	ASSERT(res && scv_size(v) == scv_capacity(v));
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST shrink_to_fit_size_below_capacity(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_resize(v, 80);
-
-	res = scv_shrink_to_fit(v);
-
-	ASSERT(res && scv_size(v) == scv_capacity(v));
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_resize */
-
-TEST resize_zero_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_insert(v, 0, NULL, 50);
-
-	res = scv_resize(v, 0);
-
-	ASSERT(res && scv_size(v) == 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST resize_smaller_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_insert(v, 0, NULL, 50);
-
-	res = scv_resize(v, 25);
-
-	ASSERT(res && scv_size(v) == 25);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST resize_equal_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_insert(v, 0, NULL, 50);
-
-	res = scv_resize(v, 50);
-
-	ASSERT(res && scv_size(v) == 50);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST resize_larger_size(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_insert(v, 0, NULL, 50);
-
-	res = scv_resize(v, 75);
-
-	ASSERT(res && scv_size(v) == 75);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST resize_larger_capacity(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	scv_insert(v, 0, NULL, 50);
-
-	res = scv_resize(v, 125);
-
-	ASSERT(res && scv_size(v) == 125);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-TEST resize_size_max(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(1, 100);
-
-	res = scv_resize(v, (size_t) -1);
-
-	ASSERT(res == 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_copy */
-
-TEST copy_empty_to_empty(void)
-{
-	struct scv_vector *v1;
-	struct scv_vector *v2;
-	int res;
-
-	v1 = scv_new(4, 25);
-	v2 = scv_new(4, 50);
-
-	res = scv_copy(v1, v2);
-
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 0);
-
-	scv_delete(v1);
-	scv_delete(v2);
-
-	PASS();
-}
-
-TEST copy_empty_to_nonempty(void)
-{
-	struct scv_vector *v1;
-	struct scv_vector *v2;
-	int res;
-
-	v1 = scv_new(4, 25);
-	v2 = scv_new(4, 50);
-
-	scv_insert(v1, 0, NULL, 5);
-
-	res = scv_copy(v1, v2);
-
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 0);
-
-	scv_delete(v1);
-	scv_delete(v2);
-
-	PASS();
-}
-
-TEST copy_nonempty_to_empty(void)
-{
-	struct scv_vector *v1;
-	struct scv_vector *v2;
-	int res;
-
-	v1 = scv_new(4, 25);
-	v2 = scv_new(4, 50);
-
-	scv_insert(v2, 0, NULL, 5);
-
-	res = scv_copy(v1, v2);
-
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 5);
-
-	scv_delete(v1);
-	scv_delete(v2);
-
-	PASS();
-}
-
-TEST copy_nonempty_to_nonempty(void)
-{
-	struct scv_vector *v1;
-	struct scv_vector *v2;
-	int res;
-
-	v1 = scv_new(4, 25);
-	v2 = scv_new(4, 50);
-
-	scv_insert(v1, 0, NULL, 10);
-	scv_insert(v2, 0, NULL, 5);
-
-	res = scv_copy(v1, v2);
-
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 5);
-
-	scv_delete(v1);
-	scv_delete(v2);
-
-	PASS();
-}
-
-TEST copy_objsize_mismatch(void)
-{
-	struct scv_vector *v1;
-	struct scv_vector *v2;
-	int res;
-
-	v1 = scv_new(4, 25);
-	v2 = scv_new(2, 50);
-
-	res = scv_copy(v1, v2);
-
-	ASSERT(res == 0);
-
-	scv_delete(v1);
-	scv_delete(v2);
-
-	PASS();
-}
-
-TEST copy_to_itself(void)
-{
-	struct scv_vector *v;
-	int res;
-
-	v = scv_new(4, 25);
-
-	res = scv_copy(v, v);
-
-	ASSERT(res == 0);
-
-	scv_delete(v);
-
-	PASS();
-}
-
-/* scv_swap */
-
-TEST swap(void)
-{
-	struct scv_vector *v1;
-	struct scv_vector *v2;
-	int res;
-
-	v1 = scv_new(1, 100);
-	v2 = scv_new(4, 25);
-
-	res = scv_swap(v1, v2);
-
-	ASSERT(res && scv_capacity(v1) == 25 && scv_capacity(v2) == 100);
-
-	scv_delete(v1);
-	scv_delete(v2);
-
-	PASS();
-}
-
 /* scv_at */
 
 TEST at_inside(void)
@@ -790,6 +285,262 @@ TEST data_empty(void)
 	p = scv_data(v);
 
 	ASSERT(p == NULL);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_empty */
+
+TEST empty_empty(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	res = scv_empty(v);
+
+	ASSERT(res != 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST empty_nonempty(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_resize(v, 1);
+
+	res = scv_empty(v);
+
+	ASSERT(res == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_size */
+
+TEST size_empty(void)
+{
+	struct scv_vector *v;
+
+	v = scv_new(3, 25);
+
+	ASSERT(v != NULL && scv_size(v) == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST size_nonempty(void)
+{
+	struct scv_vector *v;
+
+	v = scv_new(3, 25);
+
+	scv_resize(v, 10);
+
+	ASSERT(v != NULL && scv_size(v) == 10);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_objsize */
+
+TEST objsize(void)
+{
+	struct scv_vector *v;
+
+	v = scv_new(3, 25);
+
+	ASSERT(v != NULL && scv_objsize(v) == 3);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_reserve */
+
+TEST reserve_zero(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	res = scv_reserve(v, 0);
+
+	ASSERT(res && scv_capacity(v) == 100);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST reserve_below_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 120);
+
+	scv_resize(v, 100);
+
+	res = scv_reserve(v, 80);
+
+	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST reserve_equals_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 120);
+
+	scv_resize(v, 100);
+
+	res = scv_reserve(v, 100);
+
+	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST reserve_above_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 120);
+
+	scv_resize(v, 100);
+
+	res = scv_reserve(v, 110);
+
+	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST reserve_above_capacity(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 120);
+
+	scv_resize(v, 100);
+
+	res = scv_reserve(v, 140);
+
+	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 140);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST reserve_capacity_max(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	res = scv_reserve(v, (size_t) -1);
+
+	ASSERT(res == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_capacity */
+
+TEST capacity(void)
+{
+	struct scv_vector *v;
+
+	v = scv_new(3, 25);
+
+	ASSERT(v != NULL && scv_capacity(v) >= 25);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_shrink_to_fit */
+
+TEST shrink_to_fit_empty(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	res = scv_shrink_to_fit(v);
+
+	ASSERT(res && scv_capacity(v) > 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST shrink_to_fit_size_equals_capacity(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_resize(v, 100);
+
+	res = scv_shrink_to_fit(v);
+
+	ASSERT(res && scv_size(v) == scv_capacity(v));
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST shrink_to_fit_size_below_capacity(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_resize(v, 80);
+
+	res = scv_shrink_to_fit(v);
+
+	ASSERT(res && scv_size(v) == scv_capacity(v));
 
 	scv_delete(v);
 
@@ -1676,6 +1427,255 @@ TEST pop_back_empty(void)
 	PASS();
 }
 
+/* scv_resize */
+
+TEST resize_zero_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_insert(v, 0, NULL, 50);
+
+	res = scv_resize(v, 0);
+
+	ASSERT(res && scv_size(v) == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST resize_smaller_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_insert(v, 0, NULL, 50);
+
+	res = scv_resize(v, 25);
+
+	ASSERT(res && scv_size(v) == 25);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST resize_equal_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_insert(v, 0, NULL, 50);
+
+	res = scv_resize(v, 50);
+
+	ASSERT(res && scv_size(v) == 50);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST resize_larger_size(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_insert(v, 0, NULL, 50);
+
+	res = scv_resize(v, 75);
+
+	ASSERT(res && scv_size(v) == 75);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST resize_larger_capacity(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	scv_insert(v, 0, NULL, 50);
+
+	res = scv_resize(v, 125);
+
+	ASSERT(res && scv_size(v) == 125);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST resize_size_max(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(1, 100);
+
+	res = scv_resize(v, (size_t) -1);
+
+	ASSERT(res == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_copy */
+
+TEST copy_empty_to_empty(void)
+{
+	struct scv_vector *v1;
+	struct scv_vector *v2;
+	int res;
+
+	v1 = scv_new(4, 25);
+	v2 = scv_new(4, 50);
+
+	res = scv_copy(v1, v2);
+
+	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 0);
+
+	scv_delete(v1);
+	scv_delete(v2);
+
+	PASS();
+}
+
+TEST copy_empty_to_nonempty(void)
+{
+	struct scv_vector *v1;
+	struct scv_vector *v2;
+	int res;
+
+	v1 = scv_new(4, 25);
+	v2 = scv_new(4, 50);
+
+	scv_insert(v1, 0, NULL, 5);
+
+	res = scv_copy(v1, v2);
+
+	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 0);
+
+	scv_delete(v1);
+	scv_delete(v2);
+
+	PASS();
+}
+
+TEST copy_nonempty_to_empty(void)
+{
+	struct scv_vector *v1;
+	struct scv_vector *v2;
+	int res;
+
+	v1 = scv_new(4, 25);
+	v2 = scv_new(4, 50);
+
+	scv_insert(v2, 0, NULL, 5);
+
+	res = scv_copy(v1, v2);
+
+	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 5);
+
+	scv_delete(v1);
+	scv_delete(v2);
+
+	PASS();
+}
+
+TEST copy_nonempty_to_nonempty(void)
+{
+	struct scv_vector *v1;
+	struct scv_vector *v2;
+	int res;
+
+	v1 = scv_new(4, 25);
+	v2 = scv_new(4, 50);
+
+	scv_insert(v1, 0, NULL, 10);
+	scv_insert(v2, 0, NULL, 5);
+
+	res = scv_copy(v1, v2);
+
+	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 5);
+
+	scv_delete(v1);
+	scv_delete(v2);
+
+	PASS();
+}
+
+TEST copy_objsize_mismatch(void)
+{
+	struct scv_vector *v1;
+	struct scv_vector *v2;
+	int res;
+
+	v1 = scv_new(4, 25);
+	v2 = scv_new(2, 50);
+
+	res = scv_copy(v1, v2);
+
+	ASSERT(res == 0);
+
+	scv_delete(v1);
+	scv_delete(v2);
+
+	PASS();
+}
+
+TEST copy_to_itself(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(4, 25);
+
+	res = scv_copy(v, v);
+
+	ASSERT(res == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+/* scv_swap */
+
+TEST swap(void)
+{
+	struct scv_vector *v1;
+	struct scv_vector *v2;
+	int res;
+
+	v1 = scv_new(1, 100);
+	v2 = scv_new(4, 25);
+
+	res = scv_swap(v1, v2);
+
+	ASSERT(res && scv_capacity(v1) == 25 && scv_capacity(v2) == 100);
+
+	scv_delete(v1);
+	scv_delete(v2);
+
+	PASS();
+}
+
 SUITE(scv)
 {
 	RUN_TEST(new_objsize_zero);
@@ -1684,43 +1684,6 @@ SUITE(scv)
 	RUN_TEST(new_capacity_max);
 
 	RUN_TEST(delete_null);
-
-	RUN_TEST(objsize);
-
-	RUN_TEST(size_empty);
-	RUN_TEST(size_nonempty);
-
-	RUN_TEST(empty_empty);
-	RUN_TEST(empty_nonempty);
-
-	RUN_TEST(capacity);
-
-	RUN_TEST(reserve_zero);
-	RUN_TEST(reserve_below_size);
-	RUN_TEST(reserve_equals_size);
-	RUN_TEST(reserve_above_size);
-	RUN_TEST(reserve_above_capacity);
-	RUN_TEST(reserve_capacity_max);
-
-	RUN_TEST(shrink_to_fit_empty);
-	RUN_TEST(shrink_to_fit_size_equals_capacity);
-	RUN_TEST(shrink_to_fit_size_below_capacity);
-
-	RUN_TEST(resize_zero_size);
-	RUN_TEST(resize_smaller_size);
-	RUN_TEST(resize_equal_size);
-	RUN_TEST(resize_larger_size);
-	RUN_TEST(resize_larger_capacity);
-	RUN_TEST(resize_size_max);
-
-	RUN_TEST(copy_empty_to_empty);
-	RUN_TEST(copy_empty_to_nonempty);
-	RUN_TEST(copy_nonempty_to_empty);
-	RUN_TEST(copy_nonempty_to_nonempty);
-	RUN_TEST(copy_objsize_mismatch);
-	RUN_TEST(copy_to_itself);
-
-	RUN_TEST(swap);
 
 	RUN_TEST(at_inside);
 	RUN_TEST(at_outside);
@@ -1735,6 +1698,27 @@ SUITE(scv)
 
 	RUN_TEST(data_nonempty);
 	RUN_TEST(data_empty);
+
+	RUN_TEST(empty_empty);
+	RUN_TEST(empty_nonempty);
+
+	RUN_TEST(size_empty);
+	RUN_TEST(size_nonempty);
+
+	RUN_TEST(objsize);
+
+	RUN_TEST(reserve_zero);
+	RUN_TEST(reserve_below_size);
+	RUN_TEST(reserve_equals_size);
+	RUN_TEST(reserve_above_size);
+	RUN_TEST(reserve_above_capacity);
+	RUN_TEST(reserve_capacity_max);
+
+	RUN_TEST(capacity);
+
+	RUN_TEST(shrink_to_fit_empty);
+	RUN_TEST(shrink_to_fit_size_equals_capacity);
+	RUN_TEST(shrink_to_fit_size_below_capacity);
 
 	RUN_TEST(clear_nonempty);
 	RUN_TEST(clear_empty);
@@ -1781,6 +1765,22 @@ SUITE(scv)
 
 	RUN_TEST(pop_back);
 	RUN_TEST(pop_back_empty);
+
+	RUN_TEST(resize_zero_size);
+	RUN_TEST(resize_smaller_size);
+	RUN_TEST(resize_equal_size);
+	RUN_TEST(resize_larger_size);
+	RUN_TEST(resize_larger_capacity);
+	RUN_TEST(resize_size_max);
+
+	RUN_TEST(copy_empty_to_empty);
+	RUN_TEST(copy_empty_to_nonempty);
+	RUN_TEST(copy_nonempty_to_empty);
+	RUN_TEST(copy_nonempty_to_nonempty);
+	RUN_TEST(copy_objsize_mismatch);
+	RUN_TEST(copy_to_itself);
+
+	RUN_TEST(swap);
 }
 
 GREATEST_MAIN_DEFS();
