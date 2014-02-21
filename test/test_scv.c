@@ -43,7 +43,7 @@ static int check_int_vector(struct scv_vector *v)
 		return 0;
 	}
 
-	p = scv_front(v);
+	p = scv_data(v);
 
 	for (i = 0, j = 0; i < scv_size(v); ++i, ++j) {
 		if (p[i] != j) {
