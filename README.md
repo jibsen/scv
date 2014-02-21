@@ -12,12 +12,14 @@ Copyright 2003-2014 Joergen Ibsen
 About
 -----
 
-Simple C Vector (scv) is an ANSI C implementation of a [dynamic array][dyna].
+Simple C Vector (scv) is an ANSI C implementation of a [dynamic array][dyna],
+with an interface similar to C++ [std::vector][vector].
 
 I wrote it for a project years ago, and decided to dust it off and make it
 available under the Apache License.
 
 [dyna]: http://en.wikipedia.org/wiki/Dynamic_array
+[vector]: http://en.cppreference.com/w/cpp/container/vector
 
 
 Usage
