@@ -101,7 +101,7 @@ and speed is important, you can use pointers to access the elements directly:
 
 ```c
 /* v is a scv_vector of int, get a pointer to it's data */
-int *p = scv_front(v);
+int *p = scv_data(v);
 
 /* we can access the elements of v using p */
 p[5] = 42;
