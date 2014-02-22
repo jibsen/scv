@@ -622,7 +622,7 @@ TEST assign_less(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -645,7 +645,7 @@ TEST assign_more(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -691,7 +691,7 @@ TEST assign_growing_capacity(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 	ASSERT(scv_capacity(v) == 25);
@@ -752,7 +752,7 @@ TEST replace_empty_range_start(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -775,7 +775,7 @@ TEST replace_empty_range_middle(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -798,7 +798,7 @@ TEST replace_empty_range_end(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -821,7 +821,7 @@ TEST replace_start(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -844,7 +844,7 @@ TEST replace_middle(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -867,7 +867,7 @@ TEST replace_end(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -889,7 +889,7 @@ TEST replace_start_with_nothing(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -911,7 +911,7 @@ TEST replace_middle_with_nothing(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -933,7 +933,7 @@ TEST replace_end_with_nothing(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -956,7 +956,7 @@ TEST replace_with_less(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -979,7 +979,7 @@ TEST replace_with_more(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -1002,7 +1002,7 @@ TEST replace_all_with_less(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -1025,7 +1025,7 @@ TEST replace_all_with_more(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -1047,7 +1047,7 @@ TEST replace_with_null_data(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1074,7 +1074,7 @@ TEST replace_growing_capacity(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
 
@@ -1112,7 +1112,7 @@ TEST replace_outside_range(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1134,7 +1134,7 @@ TEST replace_negative_range(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1388,7 +1388,7 @@ TEST erase_start(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1410,7 +1410,7 @@ TEST erase_middle(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1432,7 +1432,7 @@ TEST erase_end(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1454,7 +1454,7 @@ TEST erase_all(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1475,7 +1475,7 @@ TEST erase_outside_range(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1497,7 +1497,7 @@ TEST erase_negative_range(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1538,7 +1538,7 @@ TEST push_back(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1581,7 +1581,7 @@ TEST pop_back(void)
 
 	v = scv_new(sizeof(int), 25);
 
-	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+	res = scv_assign(v, data, ARRAY_SIZE(data));
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 
@@ -1618,7 +1618,7 @@ TEST resize_zero_size(void)
 
 	v = scv_new(1, 100);
 
-	scv_insert(v, 0, NULL, 50);
+	scv_assign(v, NULL, 50);
 
 	res = scv_resize(v, 0);
 
@@ -1636,7 +1636,7 @@ TEST resize_smaller_size(void)
 
 	v = scv_new(1, 100);
 
-	scv_insert(v, 0, NULL, 50);
+	scv_assign(v, NULL, 50);
 
 	res = scv_resize(v, 25);
 
@@ -1654,7 +1654,7 @@ TEST resize_equal_size(void)
 
 	v = scv_new(1, 100);
 
-	scv_insert(v, 0, NULL, 50);
+	scv_assign(v, NULL, 50);
 
 	res = scv_resize(v, 50);
 
@@ -1672,7 +1672,7 @@ TEST resize_larger_size(void)
 
 	v = scv_new(1, 100);
 
-	scv_insert(v, 0, NULL, 50);
+	scv_assign(v, NULL, 50);
 
 	res = scv_resize(v, 75);
 
@@ -1690,7 +1690,7 @@ TEST resize_larger_capacity(void)
 
 	v = scv_new(1, 100);
 
-	scv_insert(v, 0, NULL, 50);
+	scv_assign(v, NULL, 50);
 
 	res = scv_resize(v, 125);
 
