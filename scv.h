@@ -143,6 +143,20 @@ int scv_shrink_to_fit(struct scv_vector *v);
 int scv_clear(struct scv_vector *v);
 
 /**
+ * Replace the contents of `v` with `nobj` elements from `data`.
+ *
+ * If `data` is `NULL`, any assigned elements are not initialized.
+ *
+ * `data` must not point inside `v`.
+ *
+ * @param v pointer to `scv_vector`.
+ * @param data pointer to data to copy into assigned elements.
+ * @param nobj number of elements to assign.
+ * @return non-zero on success, zero on error.
+ */
+int scv_assign(struct scv_vector *v, const void *data, size_t nobj);
+
+/**
  * Replace elements from `i` up to, but not including, `j` in `v`, with
  * `nobj` elements from `data`.
  *

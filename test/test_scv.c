@@ -583,6 +583,175 @@ TEST clear_empty(void)
 	PASS();
 }
 
+/* scv_assign */
+
+TEST assign_empty_to_empty(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_assign(v, NULL, 0);
+
+	ASSERT(res && scv_capacity(v) == 25 && scv_size(v) == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_empty_to_nonempty(void)
+{
+	struct scv_vector *v;
+	const int data[] = { 0, 1, 2, 3, 4 };
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+
+	res = scv_assign(v, NULL, 0);
+
+	ASSERT(res && scv_size(v) == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_nonempty_to_empty(void)
+{
+	struct scv_vector *v;
+	const int data[] = { 0, 1, 2, 3, 4 };
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	ASSERT(scv_size(v) == 0);
+
+	res = scv_assign(v, data, ARRAY_SIZE(data));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(check_int_vector(v));
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_less(void)
+{
+	struct scv_vector *v;
+	const int data1[] = { -1, -1, -1, -1, -1, -1, -1 };
+	const int data2[] = { 0, 1, 2, 3, 4 };
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+
+	res = scv_assign(v, data2, ARRAY_SIZE(data2));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(check_int_vector(v));
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_more(void)
+{
+	struct scv_vector *v;
+	const int data1[] = { -1, -1, -1 };
+	const int data2[] = { 0, 1, 2, 3, 4 };
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+
+	res = scv_assign(v, data2, ARRAY_SIZE(data2));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(check_int_vector(v));
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_null_data(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	ASSERT(scv_size(v) == 0);
+
+	res = scv_assign(v, NULL, 50);
+
+	ASSERT(res && scv_size(v) == 50);
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_growing_capacity(void)
+{
+	struct scv_vector *v;
+	const int data1[] = { -1, -1, -1 };
+	int data2[50];
+	int res;
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(data2); ++i) {
+		data2[i] = i;
+	}
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(scv_capacity(v) == 25);
+
+	res = scv_assign(v, data2, ARRAY_SIZE(data2));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(scv_capacity(v) >= ARRAY_SIZE(data2));
+	ASSERT(check_int_vector(v));
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST assign_nobj_max(void)
+{
+	struct scv_vector *v;
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_assign(v, NULL, (size_t) -1);
+
+	ASSERT(res == 0 && scv_size(v) == 0);
+
+	scv_delete(v);
+
+	PASS();
+}
+
 /* scv_replace */
 
 TEST replace_empty_vector(void)
@@ -1764,6 +1933,15 @@ SUITE(scv)
 
 	RUN_TEST(clear_nonempty);
 	RUN_TEST(clear_empty);
+
+	RUN_TEST(assign_empty_to_empty);
+	RUN_TEST(assign_empty_to_nonempty);
+	RUN_TEST(assign_nonempty_to_empty);
+	RUN_TEST(assign_less);
+	RUN_TEST(assign_more);
+	RUN_TEST(assign_null_data);
+	RUN_TEST(assign_growing_capacity);
+	RUN_TEST(assign_nobj_max);
 
 	RUN_TEST(replace_empty_vector);
 	RUN_TEST(replace_empty_range_start);

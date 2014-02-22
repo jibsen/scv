@@ -284,6 +284,32 @@ int scv_clear(struct scv_vector *v)
 	return 1;
 }
 
+int scv_assign(struct scv_vector *v, const void *data, size_t nobj)
+{
+	assert(v != NULL);
+	assert(v->data != NULL);
+
+	assert(v->objsize > 0);
+
+	if (nobj >= (size_t) -1 / v->objsize) {
+		return 0;
+	}
+
+	if (nobj > v->capacity) {
+		if (!scv_i_grow(v, nobj)) {
+			return 0;
+		}
+	}
+
+	if (data != NULL && nobj > 0) {
+		memcpy(v->data, data, nobj * v->objsize);
+	}
+
+	v->size = nobj;
+
+	return 1;
+}
+
 int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size_t nobj)
 {
 	assert(v != NULL);
