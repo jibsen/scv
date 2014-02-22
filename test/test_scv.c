@@ -899,6 +899,27 @@ TEST replace_all_with_more(void)
 	PASS();
 }
 
+TEST replace_with_null_data(void)
+{
+	struct scv_vector *v;
+	const int data[] = { -1, -1, -1 };
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+
+	res = scv_replace(v, 0, scv_size(v), NULL, 50);
+
+	ASSERT(res && scv_size(v) == 50);
+
+	scv_delete(v);
+
+	PASS();
+}
+
 TEST replace_growing_capacity(void)
 {
 	struct scv_vector *v;
@@ -1102,6 +1123,27 @@ TEST insert_nothing(void)
 
 	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
+
+	scv_delete(v);
+
+	PASS();
+}
+
+TEST insert_null_data(void)
+{
+	struct scv_vector *v;
+	const int data[] = { -1, -1, -1 };
+	int res;
+
+	v = scv_new(sizeof(int), 25);
+
+	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+
+	res = scv_insert(v, 0, NULL, 50);
+
+	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) + 50);
 
 	scv_delete(v);
 
@@ -1737,6 +1779,7 @@ SUITE(scv)
 	RUN_TEST(replace_with_more);
 	RUN_TEST(replace_all_with_less);
 	RUN_TEST(replace_all_with_more);
+	RUN_TEST(replace_with_null_data);
 	RUN_TEST(replace_growing_capacity);
 	RUN_TEST(replace_nobj_max);
 	RUN_TEST(replace_outside_range);
@@ -1747,6 +1790,7 @@ SUITE(scv)
 	RUN_TEST(insert_middle);
 	RUN_TEST(insert_end);
 	RUN_TEST(insert_nothing);
+	RUN_TEST(insert_null_data);
 	RUN_TEST(insert_growing_capacity);
 	RUN_TEST(insert_nobj_max);
 	RUN_TEST(insert_outside_range);
