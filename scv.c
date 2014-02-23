@@ -421,7 +421,7 @@ int scv_copy(struct scv_vector *dst, const struct scv_vector *src)
 		return 0;
 	}
 
-	return scv_replace(dst, 0, dst->size, src->data, src->size);
+	return scv_assign(dst, src->data, src->size);
 }
 
 int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2)
