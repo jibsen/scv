@@ -42,46 +42,46 @@ into a `scv_vector` and prints them in lexicographical order:
 #include "scv.h"
 
 struct point {
-    int x;
-    int y;
+	int x;
+	int y;
 };
 
 int point_compare(const struct point *lhs, const struct point *rhs)
 {
-    if (lhs->x == rhs->x) {
-        return lhs->y - rhs->y;
-    }
+	if (lhs->x == rhs->x) {
+		return lhs->y - rhs->y;
+	}
 
-    return lhs->x - rhs->x;
+	return lhs->x - rhs->x;
 }
 
 int main(void)
 {
-    struct scv_vector *v;
-    struct point p;
-    size_t i;
+	struct scv_vector *v;
+	struct point p;
+	size_t i;
 
-    /* create a scv_vector of points, reserving space for 10 */
-    v = scv_new(sizeof p, 10);
+	/* create a scv_vector of points, reserving space for 10 */
+	v = scv_new(sizeof p, 10);
 
-    /* read coordinates into p and append to v */
-    while (scanf("%d,%d", &p.x, &p.y) == 2) {
-        scv_push_back(v, &p);
-    }
+	/* read coordinates into p and append to v */
+	while (scanf("%d,%d", &p.x, &p.y) == 2) {
+		scv_push_back(v, &p);
+	}
 
-    /* sort points in v */
-    qsort(scv_data(v), scv_size(v), scv_objsize(v), point_compare);
+	/* sort points in v */
+	qsort(scv_data(v), scv_size(v), scv_objsize(v), point_compare);
 
-    /* print points */
-    for (i = 0; i < scv_size(v); ++i) {
-        struct point *pp = scv_at(v, i);
+	/* print points */
+	for (i = 0; i < scv_size(v); ++i) {
+		struct point *pp = scv_at(v, i);
 
-        printf("%d,%d\n", pp->x, pp->y);
-    }
+		printf("%d,%d\n", pp->x, pp->y);
+	}
 
-    scv_delete(v);
+	scv_delete(v);
 
-    return 0;
+	return 0;
 }
 ```
 
@@ -102,11 +102,11 @@ valid until a function causes a reallocation. If you know the element type,
 and speed is important, you can use pointers to access the elements directly:
 
 ```c
-/* v is a scv_vector of int, get a pointer to it's data */
-int *p = scv_data(v);
+	/* v is a scv_vector of int, get a pointer to it's data */
+	int *p = scv_data(v);
 
-/* we can access the elements of v using p */
-p[5] = 42;
+	/* we can access the elements of v using p */
+	p[5] = 42;
 ```
 
 scv uses `malloc()` for memory allocation, which works well in many cases,
