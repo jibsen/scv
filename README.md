@@ -16,7 +16,7 @@ Simple C Vector (scv) is an ANSI C implementation of a [dynamic array][dyna],
 with an interface similar to C++ [std::vector][vector].
 
 I wrote it for a project years ago, and decided to dust it off and make it
-available under the Apache License.
+available under the [Apache License](LICENSE).
 
 [dyna]: http://en.wikipedia.org/wiki/Dynamic_array
 [vector]: http://en.cppreference.com/w/cpp/container/vector
@@ -25,8 +25,8 @@ available under the Apache License.
 Usage
 -----
 
-The include file (scv.h) contains documentation in the form of doxygen style
-comments for all functions.
+The include file, [scv.h](scv.h), contains documentation in the form of
+doxygen style comments for all functions.
 
 
 Example
