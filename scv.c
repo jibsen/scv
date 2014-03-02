@@ -187,6 +187,7 @@ void *scv_data(struct scv_vector *v)
 int scv_empty(const struct scv_vector *v)
 {
 	assert(v != NULL);
+	assert(v->data != NULL);
 
 	return v->size == 0;
 }
@@ -194,6 +195,7 @@ int scv_empty(const struct scv_vector *v)
 size_t scv_size(const struct scv_vector *v)
 {
 	assert(v != NULL);
+	assert(v->data != NULL);
 
 	return v->size;
 }
@@ -201,6 +203,7 @@ size_t scv_size(const struct scv_vector *v)
 size_t scv_objsize(const struct scv_vector *v)
 {
 	assert(v != NULL);
+	assert(v->data != NULL);
 
 	return v->objsize;
 }
@@ -237,6 +240,7 @@ int scv_reserve(struct scv_vector *v, size_t capacity)
 size_t scv_capacity(const struct scv_vector *v)
 {
 	assert(v != NULL);
+	assert(v->data != NULL);
 
 	return v->capacity;
 }
@@ -255,6 +259,7 @@ int scv_shrink_to_fit(struct scv_vector *v)
 
 	newcapacity = v->size;
 
+	assert(v->objsize > 0);
 	assert(newcapacity < (size_t) -1 / v->objsize);
 
 	/* minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
@@ -364,6 +369,8 @@ int scv_push_back(struct scv_vector *v, const void *data)
 			return 0;
 		}
 	}
+
+	assert(v->objsize > 0);
 
 	if (data != NULL) {
 		memcpy(SCV_AT(v, v->size), data, v->objsize);
