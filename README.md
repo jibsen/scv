@@ -89,6 +89,9 @@ int main(void)
 Details
 -------
 
+The user is responsible for passing pointers to valid `scv_vector` structures.
+The code contains assertions to help while debugging.
+
 To enable the code to work in general, independent of the type of objects
 stored in a particular `scv_vector`, functions for inserting and accessing
 elements take and return `void` pointers.
