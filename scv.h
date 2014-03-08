@@ -162,7 +162,7 @@ int scv_assign(struct scv_vector *v, const void *data, size_t nobj);
  *
  * If `data` is `NULL`, any inserted elements are not initialized.
  *
- * `i` can be `p->size`, in which case elements are added at the end.
+ * `i` can be `scv_size(v)`, in which case elements are added at the end.
  *
  * `data` must not point inside `v`.
  *
@@ -180,7 +180,7 @@ int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size
  *
  * If `data` is `NULL`, inserted elements are not initialized.
  *
- * `i` can be `p->size`, in which case elements are added at the end.
+ * `i` can be `scv_size(v)`, in which case elements are added at the end.
  *
  * `data` must not point inside `v`.
  *
