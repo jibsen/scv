@@ -24,16 +24,25 @@
 
 #include "scv.h"
 
+/**
+ * Returns a pointer to element number `i` of `v`, without error checking.
+ *
+ * @param v pointer to `scv_vector`
+ * @param i index
+ * @return pointer to element `i`
+ */
 #define SCV_AT(v, i) ((void *) ((char *) (v)->data + (i) * (v)->objsize))
 
-/* minimum allocation size in bytes */
+/**
+ * Minimum allocation size in bytes.
+ */
 #define SCV_MIN_ALLOC (64u)
 
 /**
- * Grows capacity to reserve space in `scv_vector`.
+ * Grows the capacity of `v` to at least `capacity`.
  *
- * If more space is needed, grow `scv_vector` to `capacity`, but at least by
- * a factor of 1.5.
+ * If more space is needed, grow `v` to `capacity`, but at least by a factor
+ * of 1.5.
  *
  * @param v pointer to `scv_vector`
  * @param capacity requested capacity
