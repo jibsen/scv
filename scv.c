@@ -30,14 +30,14 @@
 #define SCV_MIN_ALLOC (64u)
 
 /**
- * Grow capacity to reserve space in `scv_vector`.
+ * Grows capacity to reserve space in `scv_vector`.
  *
  * If more space is needed, grow `scv_vector` to `capacity`, but at least by
  * a factor of 1.5.
  *
- * @param v pointer to `scv_vector`.
- * @param capacity requested capacity.
- * @return non-zero on success, zero on error.
+ * @param v pointer to `scv_vector`
+ * @param capacity requested capacity
+ * @return non-zero on success, zero on error
  */
 static int scv_i_grow(struct scv_vector *v, size_t capacity)
 {
