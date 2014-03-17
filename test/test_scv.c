@@ -383,7 +383,7 @@ TEST reserve_zero(void)
 
 	res = scv_reserve(v, 0);
 
-	ASSERT(res && scv_capacity(v) == 100);
+	ASSERT(res == SCV_OK && scv_capacity(v) == 100);
 
 	scv_delete(v);
 
@@ -401,7 +401,7 @@ TEST reserve_below_size(void)
 
 	res = scv_reserve(v, 80);
 
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
+	ASSERT(res == SCV_OK && scv_size(v) == 100 && scv_capacity(v) == 120);
 
 	scv_delete(v);
 
@@ -419,7 +419,7 @@ TEST reserve_equals_size(void)
 
 	res = scv_reserve(v, 100);
 
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
+	ASSERT(res == SCV_OK && scv_size(v) == 100 && scv_capacity(v) == 120);
 
 	scv_delete(v);
 
@@ -437,7 +437,7 @@ TEST reserve_above_size(void)
 
 	res = scv_reserve(v, 110);
 
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 120);
+	ASSERT(res == SCV_OK && scv_size(v) == 100 && scv_capacity(v) == 120);
 
 	scv_delete(v);
 
@@ -455,7 +455,7 @@ TEST reserve_above_capacity(void)
 
 	res = scv_reserve(v, 140);
 
-	ASSERT(res && scv_size(v) == 100 && scv_capacity(v) == 140);
+	ASSERT(res == SCV_OK && scv_size(v) == 100 && scv_capacity(v) == 140);
 
 	scv_delete(v);
 
@@ -471,7 +471,7 @@ TEST reserve_capacity_max(void)
 
 	res = scv_reserve(v, (size_t) -1);
 
-	ASSERT(res == 0);
+	ASSERT(res != SCV_OK);
 
 	scv_delete(v);
 
@@ -504,7 +504,7 @@ TEST shrink_to_fit_empty(void)
 
 	res = scv_shrink_to_fit(v);
 
-	ASSERT(res && scv_capacity(v) > 0);
+	ASSERT(res == SCV_OK && scv_capacity(v) > 0);
 
 	scv_delete(v);
 
@@ -522,7 +522,7 @@ TEST shrink_to_fit_size_equals_capacity(void)
 
 	res = scv_shrink_to_fit(v);
 
-	ASSERT(res && scv_size(v) == scv_capacity(v));
+	ASSERT(res == SCV_OK && scv_size(v) == scv_capacity(v));
 
 	scv_delete(v);
 
@@ -540,7 +540,7 @@ TEST shrink_to_fit_size_below_capacity(void)
 
 	res = scv_shrink_to_fit(v);
 
-	ASSERT(res && scv_size(v) == scv_capacity(v));
+	ASSERT(res == SCV_OK && scv_size(v) == scv_capacity(v));
 
 	scv_delete(v);
 
@@ -560,7 +560,7 @@ TEST clear_nonempty(void)
 
 	res = scv_clear(v);
 
-	ASSERT(res && scv_size(v) == 0 && scv_capacity(v) == 25);
+	ASSERT(res == SCV_OK && scv_size(v) == 0 && scv_capacity(v) == 25);
 
 	scv_delete(v);
 
@@ -576,7 +576,7 @@ TEST clear_empty(void)
 
 	res = scv_clear(v);
 
-	ASSERT(res && scv_size(v) == 0 && scv_capacity(v) == 25);
+	ASSERT(res == SCV_OK && scv_size(v) == 0 && scv_capacity(v) == 25);
 
 	scv_delete(v);
 
@@ -597,16 +597,16 @@ TEST assign_empty_and_nonempty(void)
 
 	res = scv_assign(v, NULL, 0);
 
-	ASSERT(res && scv_capacity(v) == 25 && scv_size(v) == 0);
+	ASSERT(res == SCV_OK && scv_capacity(v) == 25 && scv_size(v) == 0);
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	res = scv_assign(v, NULL, 0);
 
-	ASSERT(res && scv_size(v) == 0);
+	ASSERT(res == SCV_OK && scv_size(v) == 0);
 
 	scv_delete(v);
 
@@ -624,11 +624,11 @@ TEST assign_less(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_assign(v, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -647,11 +647,11 @@ TEST assign_more(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_assign(v, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -670,7 +670,7 @@ TEST assign_null_data(void)
 
 	res = scv_assign(v, NULL, 50);
 
-	ASSERT(res && scv_size(v) == 50);
+	ASSERT(res == SCV_OK && scv_size(v) == 50);
 
 	scv_delete(v);
 
@@ -693,12 +693,12 @@ TEST assign_growing_capacity(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 	ASSERT(scv_capacity(v) == 25);
 
 	res = scv_assign(v, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data2));
 	ASSERT(scv_capacity(v) >= ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
@@ -716,7 +716,7 @@ TEST assign_nobj_max(void)
 
 	res = scv_assign(v, NULL, (size_t) -1);
 
-	ASSERT(res == 0 && scv_size(v) == 0);
+	ASSERT(res != SCV_OK && scv_size(v) == 0);
 
 	scv_delete(v);
 
@@ -735,7 +735,7 @@ TEST replace_empty_vector(void)
 
 	res = scv_replace(v, 0, 0, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -754,11 +754,11 @@ TEST replace_empty_range_start(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 0, 0, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -777,11 +777,11 @@ TEST replace_empty_range_middle(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 2, 2, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -800,11 +800,11 @@ TEST replace_empty_range_end(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 3, 3, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -823,11 +823,11 @@ TEST replace_start(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 0, 2, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -846,11 +846,11 @@ TEST replace_middle(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 2, 4, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -869,11 +869,11 @@ TEST replace_end(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 3, scv_size(v), data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -891,11 +891,11 @@ TEST replace_start_with_nothing(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_replace(v, 0, 2, NULL, 0);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 2);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 2);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -913,11 +913,11 @@ TEST replace_middle_with_nothing(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_replace(v, 2, 4, NULL, 0);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 2);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 2);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -935,11 +935,11 @@ TEST replace_end_with_nothing(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_replace(v, scv_size(v) - 2, scv_size(v), NULL, 0);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 2);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 2);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -958,11 +958,11 @@ TEST replace_with_less(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 2, 5, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == 5);
+	ASSERT(res == SCV_OK && scv_size(v) == 5);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -981,11 +981,11 @@ TEST replace_with_more(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 2, 3, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == 5);
+	ASSERT(res == SCV_OK && scv_size(v) == 5);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1004,11 +1004,11 @@ TEST replace_all_with_less(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 0, scv_size(v), data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1027,11 +1027,11 @@ TEST replace_all_with_more(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 0, scv_size(v), data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1049,11 +1049,11 @@ TEST replace_with_null_data(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_replace(v, 0, scv_size(v), NULL, 50);
 
-	ASSERT(res && scv_size(v) == 50);
+	ASSERT(res == SCV_OK && scv_size(v) == 50);
 
 	scv_delete(v);
 
@@ -1076,11 +1076,11 @@ TEST replace_growing_capacity(void)
 
 	res = scv_assign(v, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_replace(v, 0, 0, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1097,7 +1097,7 @@ TEST replace_nobj_max(void)
 
 	res = scv_replace(v, 0, 0, NULL, (size_t) -1);
 
-	ASSERT(res == 0 && scv_size(v) == 0);
+	ASSERT(res != SCV_OK && scv_size(v) == 0);
 
 	scv_delete(v);
 
@@ -1114,11 +1114,11 @@ TEST replace_outside_range(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_replace(v, 2, scv_size(v) + 1, NULL, 0);
 
-	ASSERT(res == 0 && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res != SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1136,11 +1136,11 @@ TEST replace_negative_range(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_replace(v, 3, 2, NULL, 1);
 
-	ASSERT(res == 0 && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res != SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1160,7 +1160,7 @@ TEST insert_empty_vector(void)
 
 	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1179,11 +1179,11 @@ TEST insert_start(void)
 
 	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_insert(v, 0, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1202,11 +1202,11 @@ TEST insert_middle(void)
 
 	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_insert(v, 2, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1225,11 +1225,11 @@ TEST insert_end(void)
 
 	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_insert(v, scv_size(v), data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1247,21 +1247,21 @@ TEST insert_nothing(void)
 
 	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_insert(v, 0, NULL, 0);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	res = scv_insert(v, 2, NULL, 0);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	res = scv_insert(v, scv_size(v), NULL, 0);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1279,11 +1279,11 @@ TEST insert_null_data(void)
 
 	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_insert(v, 0, NULL, 50);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) + 50);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) + 50);
 
 	scv_delete(v);
 
@@ -1306,11 +1306,11 @@ TEST insert_growing_capacity(void)
 
 	res = scv_insert(v, 0, data1, ARRAY_SIZE(data1));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1));
 
 	res = scv_insert(v, 0, data2, ARRAY_SIZE(data2));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data1) + ARRAY_SIZE(data2));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1327,7 +1327,7 @@ TEST insert_nobj_max(void)
 
 	res = scv_insert(v, 0, NULL, (size_t) -1);
 
-	ASSERT(res == 0 && scv_size(v) == 0);
+	ASSERT(res != SCV_OK && scv_size(v) == 0);
 
 	scv_delete(v);
 
@@ -1344,11 +1344,11 @@ TEST insert_outside_range(void)
 
 	res = scv_insert(v, 0, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_insert(v, scv_size(v) + 1, NULL, 0);
 
-	ASSERT(res == 0 && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res != SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1367,13 +1367,13 @@ TEST erase_nothing(void)
 
 	res = scv_erase(v, 0, 0);
 
-	ASSERT(res && scv_size(v) == 0);
+	ASSERT(res == SCV_OK && scv_size(v) == 0);
 
 	scv_resize(v, 10);
 
 	res = scv_erase(v, 0, 0);
 
-	ASSERT(res && scv_size(v) == 10);
+	ASSERT(res == SCV_OK && scv_size(v) == 10);
 
 	scv_delete(v);
 
@@ -1390,11 +1390,11 @@ TEST erase_start(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_erase(v, 0, 2);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 2);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 2);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1412,11 +1412,11 @@ TEST erase_middle(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_erase(v, 2, 4);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 2);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 2);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1434,11 +1434,11 @@ TEST erase_end(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_erase(v, scv_size(v) - 2, scv_size(v));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 2);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 2);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1456,11 +1456,11 @@ TEST erase_all(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_erase(v, 0, scv_size(v));
 
-	ASSERT(res && scv_size(v) == 0);
+	ASSERT(res == SCV_OK && scv_size(v) == 0);
 
 	scv_delete(v);
 
@@ -1477,11 +1477,11 @@ TEST erase_outside_range(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_erase(v, 2, scv_size(v) + 1);
 
-	ASSERT(res == 0 && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res != SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1499,11 +1499,11 @@ TEST erase_negative_range(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_erase(v, 3, 2);
 
-	ASSERT(res == 0 && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res != SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1523,7 +1523,7 @@ TEST push_back_empty(void)
 
 	res = scv_push_back(v, &i);
 
-	ASSERT(res && scv_size(v) == 1);
+	ASSERT(res == SCV_OK && scv_size(v) == 1);
 	ASSERT(check_int_vector(v));
 
 	PASS();
@@ -1540,11 +1540,11 @@ TEST push_back(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_push_back(v, &i);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) + 1);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) + 1);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1562,7 +1562,7 @@ TEST push_back_growing_capacity(void)
 
 	for (i = 0; i < 30; ++i) {
 		res = scv_push_back(v, &i);
-		ASSERT(res && scv_size(v) == (size_t) i + 1);
+		ASSERT(res == SCV_OK && scv_size(v) == (size_t) i + 1);
 		ASSERT(check_int_vector(v));
 	}
 
@@ -1583,11 +1583,11 @@ TEST pop_back(void)
 
 	res = scv_assign(v, data, ARRAY_SIZE(data));
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data));
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data));
 
 	res = scv_pop_back(v);
 
-	ASSERT(res && scv_size(v) == ARRAY_SIZE(data) - 1);
+	ASSERT(res == SCV_OK && scv_size(v) == ARRAY_SIZE(data) - 1);
 	ASSERT(check_int_vector(v));
 
 	scv_delete(v);
@@ -1604,7 +1604,7 @@ TEST pop_back_empty(void)
 
 	res = scv_pop_back(v);
 
-	ASSERT(res == 0 && scv_size(v) == 0);
+	ASSERT(res != SCV_OK && scv_size(v) == 0);
 
 	PASS();
 }
@@ -1622,7 +1622,7 @@ TEST resize_zero_size(void)
 
 	res = scv_resize(v, 0);
 
-	ASSERT(res && scv_size(v) == 0);
+	ASSERT(res == SCV_OK && scv_size(v) == 0);
 
 	scv_delete(v);
 
@@ -1640,7 +1640,7 @@ TEST resize_smaller_size(void)
 
 	res = scv_resize(v, 25);
 
-	ASSERT(res && scv_size(v) == 25);
+	ASSERT(res == SCV_OK && scv_size(v) == 25);
 
 	scv_delete(v);
 
@@ -1658,7 +1658,7 @@ TEST resize_equal_size(void)
 
 	res = scv_resize(v, 50);
 
-	ASSERT(res && scv_size(v) == 50);
+	ASSERT(res == SCV_OK && scv_size(v) == 50);
 
 	scv_delete(v);
 
@@ -1676,7 +1676,7 @@ TEST resize_larger_size(void)
 
 	res = scv_resize(v, 75);
 
-	ASSERT(res && scv_size(v) == 75);
+	ASSERT(res == SCV_OK && scv_size(v) == 75);
 
 	scv_delete(v);
 
@@ -1694,7 +1694,7 @@ TEST resize_larger_capacity(void)
 
 	res = scv_resize(v, 125);
 
-	ASSERT(res && scv_size(v) == 125);
+	ASSERT(res == SCV_OK && scv_size(v) == 125);
 
 	scv_delete(v);
 
@@ -1710,7 +1710,7 @@ TEST resize_size_max(void)
 
 	res = scv_resize(v, (size_t) -1);
 
-	ASSERT(res == 0);
+	ASSERT(res != SCV_OK);
 
 	scv_delete(v);
 
@@ -1730,7 +1730,7 @@ TEST copy_empty_to_empty(void)
 
 	res = scv_copy(v1, v2);
 
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 0);
+	ASSERT(res == SCV_OK && scv_capacity(v1) == 25 && scv_size(v1) == 0);
 
 	scv_delete(v1);
 	scv_delete(v2);
@@ -1751,7 +1751,7 @@ TEST copy_empty_to_nonempty(void)
 
 	res = scv_copy(v1, v2);
 
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 0);
+	ASSERT(res == SCV_OK && scv_capacity(v1) == 25 && scv_size(v1) == 0);
 
 	scv_delete(v1);
 	scv_delete(v2);
@@ -1772,7 +1772,7 @@ TEST copy_nonempty_to_empty(void)
 
 	res = scv_copy(v1, v2);
 
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 5);
+	ASSERT(res == SCV_OK && scv_capacity(v1) == 25 && scv_size(v1) == 5);
 
 	scv_delete(v1);
 	scv_delete(v2);
@@ -1794,7 +1794,7 @@ TEST copy_nonempty_to_nonempty(void)
 
 	res = scv_copy(v1, v2);
 
-	ASSERT(res && scv_capacity(v1) == 25 && scv_size(v1) == 5);
+	ASSERT(res == SCV_OK && scv_capacity(v1) == 25 && scv_size(v1) == 5);
 
 	scv_delete(v1);
 	scv_delete(v2);
@@ -1813,7 +1813,7 @@ TEST copy_objsize_mismatch(void)
 
 	res = scv_copy(v1, v2);
 
-	ASSERT(res == 0);
+	ASSERT(res != SCV_OK);
 
 	scv_delete(v1);
 	scv_delete(v2);
@@ -1830,7 +1830,7 @@ TEST copy_to_itself(void)
 
 	res = scv_copy(v, v);
 
-	ASSERT(res == 0);
+	ASSERT(res != SCV_OK);
 
 	scv_delete(v);
 
@@ -1850,7 +1850,7 @@ TEST swap(void)
 
 	res = scv_swap(v1, v2);
 
-	ASSERT(res && scv_capacity(v1) == 25 && scv_capacity(v2) == 100);
+	ASSERT(res == SCV_OK && scv_capacity(v1) == 25 && scv_capacity(v2) == 100);
 
 	scv_delete(v1);
 	scv_delete(v2);

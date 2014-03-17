@@ -40,6 +40,17 @@ struct scv_vector {
 };
 
 /**
+ * Status codes returned by some functions.
+ */
+typedef enum {
+	SCV_OK = 0,      /**< Success. */
+	SCV_ERROR = -1,  /**< Generic error. */
+	SCV_ENOMEM = -2, /**< Out of memory. */
+	SCV_ERANGE = -3, /**< Overflow or out of range. */
+	SCV_EINVAL = -4  /**< Invalid argument. */
+} scv_error_code;
+
+/**
  * Creates a new `scv_vector`.
  *
  * `capacity` is in number of elements.
@@ -119,7 +130,7 @@ size_t scv_objsize(const struct scv_vector *v);
  *
  * @param v pointer to `scv_vector`
  * @param capacity requested capacity
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_reserve(struct scv_vector *v, size_t capacity);
 
@@ -135,7 +146,7 @@ size_t scv_capacity(const struct scv_vector *v);
  * Trims the capacity of `v` to the number of elements used.
  *
  * @param v pointer to `scv_vector`
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_shrink_to_fit(struct scv_vector *v);
 
@@ -143,7 +154,7 @@ int scv_shrink_to_fit(struct scv_vector *v);
  * Removes all elements from `v`.
  *
  * @param v pointer to `scv_vector`
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_clear(struct scv_vector *v);
 
@@ -157,7 +168,7 @@ int scv_clear(struct scv_vector *v);
  * @param v pointer to `scv_vector`
  * @param data pointer to data to copy into assigned elements
  * @param nobj number of elements to assign
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_assign(struct scv_vector *v, const void *data, size_t nobj);
 
@@ -176,7 +187,7 @@ int scv_assign(struct scv_vector *v, const void *data, size_t nobj);
  * @param j end index
  * @param data pointer to data to copy into new elements
  * @param nobj number of elements to insert
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size_t nobj);
 
@@ -193,7 +204,7 @@ int scv_replace(struct scv_vector *v, size_t i, size_t j, const void *data, size
  * @param i index
  * @param data pointer to data to copy into new elements
  * @param nobj number of elements to insert
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_insert(struct scv_vector *v, size_t i, const void *data, size_t nobj);
 
@@ -203,7 +214,7 @@ int scv_insert(struct scv_vector *v, size_t i, const void *data, size_t nobj);
  * @param v pointer to `scv_vector`
  * @param i start index
  * @param j end index
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_erase(struct scv_vector *v, size_t i, size_t j);
 
@@ -216,7 +227,7 @@ int scv_erase(struct scv_vector *v, size_t i, size_t j);
  *
  * @param v pointer to `scv_vector`
  * @param data pointer to data to copy into new element
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_push_back(struct scv_vector *v, const void *data);
 
@@ -224,7 +235,7 @@ int scv_push_back(struct scv_vector *v, const void *data);
  * Removes the last element of `v`.
  *
  * @param v pointer to `scv_vector`
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_pop_back(struct scv_vector *v);
 
@@ -235,7 +246,7 @@ int scv_pop_back(struct scv_vector *v);
  *
  * @param v pointer to `scv_vector`
  * @param size new size
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_resize(struct scv_vector *v, size_t size);
 
@@ -244,7 +255,7 @@ int scv_resize(struct scv_vector *v, size_t size);
  *
  * @param dst pointer to destination `scv_vector`
  * @param src pointer to source `scv_vector`
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_copy(struct scv_vector *dst, const struct scv_vector *src);
 
@@ -253,7 +264,7 @@ int scv_copy(struct scv_vector *dst, const struct scv_vector *src);
  *
  * @param scv1 pointer to `scv_vector`
  * @param scv2 pointer to `scv_vector`
- * @return non-zero on success, zero on error
+ * @return zero on success, error code on error
  */
 int scv_swap(struct scv_vector *scv1, struct scv_vector *scv2);
 
