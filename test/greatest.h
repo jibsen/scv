@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Scott Vokes <vokes.s@gmail.com>
+ * Copyright (c) 2011-2014 Scott Vokes <vokes.s@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -18,8 +18,8 @@
 #define GREATEST_H
 
 #define GREATEST_VERSION_MAJOR 0
-#define GREATEST_VERSION_MINOR 9
-#define GREATEST_VERSION_PATCH 3
+#define GREATEST_VERSION_MINOR 10
+#define GREATEST_VERSION_PATCH 0
 
 /* A unit testing system for C, contained in 1 file.
  * It doesn't use dynamic allocation or depend on anything
@@ -120,20 +120,42 @@ typedef void (greatest_suite_cb)(void);
 typedef void (greatest_setup_cb)(void *udata);
 typedef void (greatest_teardown_cb)(void *udata);
 
+/* Type for an equality comparison between two pointers of the same type.
+ * Should return non-0 if equal, otherwise 0.
+ * UDATA is a closure value, passed through from ASSERT_EQUAL_T[m]. */
+typedef int greatest_equal_cb(const void *exp, const void *got, void *udata);
+
+/* Type for a callback that prints a value pointed to by T.
+ * Return value has the same meaning as printf's.
+ * UDATA is a closure value, passed through from ASSERT_EQUAL_T[m]. */
+typedef int greatest_printf_cb(const void *t, void *udata);
+
+/* Callbacks for an arbitrary type; needed for type-specific
+ * comparisons via GREATEST_ASSERT_EQUAL_T[m].*/
+typedef struct greatest_type_info {
+    greatest_equal_cb *equal;
+    greatest_printf_cb *print;
+} greatest_type_info;
+
+/* Callbacks for string type. */
+greatest_type_info greatest_type_info_string;
+
 typedef enum {
     GREATEST_FLAG_VERBOSE = 0x01,
     GREATEST_FLAG_FIRST_FAIL = 0x02,
     GREATEST_FLAG_LIST_ONLY = 0x04
 } GREATEST_FLAG;
 
+/* Struct containing all test runner state. */
 typedef struct greatest_run_info {
     unsigned int flags;
     unsigned int tests_run;     /* total test count */
 
-    /* Overall pass/fail/skip counts. */
+    /* overall pass/fail/skip counts */
     unsigned int passed;
     unsigned int failed;
     unsigned int skipped;
+    unsigned int assertions;
 
     /* currently running test suite */
     greatest_suite_info suite;
@@ -171,12 +193,17 @@ extern greatest_run_info greatest_info;
  * Exported functions *
  **********************/
 
+/* These are used internally by greatest. */
 void greatest_do_pass(const char *name);
 void greatest_do_fail(const char *name);
 void greatest_do_skip(const char *name);
 int greatest_pre_test(const char *name);
 void greatest_post_test(const char *name, int res);
 void greatest_usage(const char *name);
+int greatest_do_assert_equal_t(const void *exp, const void *got,
+    greatest_type_info *type_info, void *udata);
+
+/* These are part of the public greatest API. */
 void GREATEST_SET_SETUP_CB(greatest_setup_cb *cb, void *udata);
 void GREATEST_SET_TEARDOWN_CB(greatest_teardown_cb *cb, void *udata);
 
@@ -239,13 +266,15 @@ void GREATEST_SET_TEARDOWN_CB(greatest_teardown_cb *cb, void *udata);
 #define GREATEST_FIRST_FAIL() (greatest_info.flags & GREATEST_FLAG_FIRST_FAIL)
 #define GREATEST_FAILURE_ABORT() (greatest_info.suite.failed > 0 && GREATEST_FIRST_FAIL())
 
-/* Message-less forms. */
+/* Message-less forms of tests defined below. */
 #define GREATEST_PASS() GREATEST_PASSm(NULL)
 #define GREATEST_FAIL() GREATEST_FAILm(NULL)
 #define GREATEST_SKIP() GREATEST_SKIPm(NULL)
 #define GREATEST_ASSERT(COND) GREATEST_ASSERTm(#COND, COND)
 #define GREATEST_ASSERT_FALSE(COND) GREATEST_ASSERT_FALSEm(#COND, COND)
 #define GREATEST_ASSERT_EQ(EXP, GOT) GREATEST_ASSERT_EQm(#EXP " != " #GOT, EXP, GOT)
+#define GREATEST_ASSERT_EQUAL_T(EXP, GOT, TYPE_INFO, UDATA)     \
+    GREATEST_ASSERT_EQUAL_Tm(#EXP " != " #GOT, EXP, GOT, TYPE_INFO, UDATA)
 #define GREATEST_ASSERT_STR_EQ(EXP, GOT) GREATEST_ASSERT_STR_EQm(#EXP " != " #GOT, EXP, GOT)
 
 /* The following forms take an additional message argument first,
@@ -254,54 +283,56 @@ void GREATEST_SET_TEARDOWN_CB(greatest_teardown_cb *cb, void *udata);
 /* Fail if a condition is not true, with message. */
 #define GREATEST_ASSERTm(MSG, COND)                                     \
     do {                                                                \
-        greatest_info.msg = MSG;                                        \
-        greatest_info.fail_file = __FILE__;                             \
-        greatest_info.fail_line = __LINE__;                             \
-        if (!(COND)) return -1;                                         \
-        greatest_info.msg = NULL;                                       \
+        greatest_info.assertions++;                                     \
+        if (!(COND)) { FAILm(MSG); }                                    \
     } while (0)
 
+/* Fail if a condition is not false, with message. */
 #define GREATEST_ASSERT_FALSEm(MSG, COND)                               \
     do {                                                                \
-        greatest_info.msg = MSG;                                        \
-        greatest_info.fail_file = __FILE__;                             \
-        greatest_info.fail_line = __LINE__;                             \
-        if ((COND)) return -1;                                          \
-        greatest_info.msg = NULL;                                       \
+        greatest_info.assertions++;                                     \
+        if ((COND)) { FAILm(MSG); }                                     \
     } while (0)
 
+/* Fail if EXP != GOT (equality comparison by ==). */
 #define GREATEST_ASSERT_EQm(MSG, EXP, GOT)                              \
     do {                                                                \
-        greatest_info.msg = MSG;                                        \
-        greatest_info.fail_file = __FILE__;                             \
-        greatest_info.fail_line = __LINE__;                             \
-        if ((EXP) != (GOT)) return -1;                                  \
-        greatest_info.msg = NULL;                                       \
+        greatest_info.assertions++;                                     \
+        if ((EXP) != (GOT)) { FAILm(MSG); }                             \
     } while (0)
 
+/* Fail if EXP is not equal to GOT, according to strcmp. */
 #define GREATEST_ASSERT_STR_EQm(MSG, EXP, GOT)                          \
     do {                                                                \
-        const char *exp_s = (EXP);                                      \
-        const char *got_s = (GOT);                                      \
-        greatest_info.msg = MSG;                                        \
-        greatest_info.fail_file = __FILE__;                             \
-        greatest_info.fail_line = __LINE__;                             \
-        if (0 != strcmp(exp_s, got_s)) {                                \
-            fprintf(GREATEST_STDOUT,                                    \
-                "Expected:\n####\n%s\n####\n", exp_s);                  \
-            fprintf(GREATEST_STDOUT,                                    \
-                "Got:\n####\n%s\n####\n", got_s);                       \
-            return -1;                                                  \
+        GREATEST_ASSERT_EQUAL_Tm(MSG, EXP, GOT,                         \
+            &greatest_type_info_string, NULL);                          \
+    } while (0)                                                         \
+
+/* Fail if EXP is not equal to GOT, according to a comparison
+ * callback in TYPE_INFO. If they are not equal, optionally use a
+ * print callback in TYPE_INFO to print them. */
+#define GREATEST_ASSERT_EQUAL_Tm(MSG, EXP, GOT, TYPE_INFO, UDATA)       \
+    do {                                                                \
+        greatest_type_info *type_info = (TYPE_INFO);                    \
+        greatest_info.assertions++;                                     \
+        if (!greatest_do_assert_equal_t(EXP, GOT,                       \
+                type_info, UDATA)) {                                    \
+            if (type_info == NULL || type_info->equal == NULL) {        \
+                FAILm("type_info->equal callback missing!");            \
+            } else {                                                    \
+                FAILm(MSG);                                             \
+            }                                                           \
         }                                                               \
-        greatest_info.msg = NULL;                                       \
-    } while (0)
-        
+    } while (0)                                                         \
+
+/* Pass. */
 #define GREATEST_PASSm(MSG)                                             \
     do {                                                                \
         greatest_info.msg = MSG;                                        \
         return 0;                                                       \
     } while (0)
-        
+
+/* Fail. */
 #define GREATEST_FAILm(MSG)                                             \
     do {                                                                \
         greatest_info.fail_file = __FILE__;                             \
@@ -310,6 +341,7 @@ void GREATEST_SET_TEARDOWN_CB(greatest_teardown_cb *cb, void *udata);
         return -1;                                                      \
     } while (0)
 
+/* Skip the current test. */
 #define GREATEST_SKIPm(MSG)                                             \
     do {                                                                \
         greatest_info.msg = MSG;                                        \
@@ -326,7 +358,7 @@ void GREATEST_SET_TEARDOWN_CB(greatest_teardown_cb *cb, void *udata);
 
 #define GREATEST_CLOCK_DIFF(C1, C2)                                     \
     fprintf(GREATEST_STDOUT, " (%lu ticks, %.3f sec)",                  \
-        (long unsigned int) (C2) - (C1),                                \
+        (long unsigned int) (C2) - (long unsigned int)(C1),             \
         (double)((C2) - (C1)) / (1.0 * (double)CLOCKS_PER_SEC))         \
 
 /* Include several function definitions in the main test file. */
@@ -394,17 +426,11 @@ void greatest_post_test(const char *name, int res) {                    \
 static void greatest_run_suite(greatest_suite_cb *suite_cb,             \
                                const char *suite_name) {                \
     if (greatest_info.suite_filter &&                                   \
-        !greatest_name_match(suite_name, greatest_info.suite_filter))   \
+        !greatest_name_match(suite_name, greatest_info.suite_filter)) { \
         return;                                                         \
-    if (GREATEST_FIRST_FAIL() && greatest_info.failed > 0) return;      \
-    greatest_info.suite.tests_run = 0;                                  \
-    greatest_info.suite.failed = 0;                                     \
-    greatest_info.suite.passed = 0;                                     \
-    greatest_info.suite.skipped = 0;                                    \
-    greatest_info.suite.pre_suite = 0;                                  \
-    greatest_info.suite.post_suite = 0;                                 \
-    greatest_info.suite.pre_test = 0;                                   \
-    greatest_info.suite.post_test = 0;                                  \
+    }                                                                   \
+    if (GREATEST_FIRST_FAIL() && greatest_info.failed > 0) { return; }  \
+    memset(&greatest_info.suite, 0, sizeof(greatest_info.suite));       \
     greatest_info.col = 0;                                              \
     fprintf(GREATEST_STDOUT, "\n* Suite %s:\n", suite_name);            \
     GREATEST_SET_TIME(greatest_info.suite.pre_suite);                   \
@@ -449,10 +475,12 @@ void greatest_do_fail(const char *name) {                               \
             greatest_info.fail_file, greatest_info.fail_line);          \
     } else {                                                            \
         fprintf(GREATEST_STDOUT, "F");                                  \
+        greatest_info.col++;                                            \
         /* add linebreak if in line of '.'s */                          \
-        if (greatest_info.col % greatest_info.width != 0)               \
+        if (greatest_info.col != 0) {                                   \
             fprintf(GREATEST_STDOUT, "\n");                             \
-        greatest_info.col = 0;                                          \
+            greatest_info.col = 0;                                      \
+        }                                                               \
         fprintf(GREATEST_STDOUT, "FAIL %s: %s (%s:%u)\n",               \
             name,                                                       \
             greatest_info.msg ? greatest_info.msg : "",                 \
@@ -471,6 +499,29 @@ void greatest_do_skip(const char *name) {                               \
         fprintf(GREATEST_STDOUT, "s");                                  \
     }                                                                   \
     greatest_info.suite.skipped++;                                      \
+}                                                                       \
+                                                                        \
+int greatest_do_assert_equal_t(const void *exp, const void *got,        \
+        greatest_type_info *type_info, void *udata) {                   \
+    if (type_info == NULL || type_info->equal == NULL) {                \
+        return 0;                                                       \
+    }                                                                   \
+    int eq = type_info->equal(exp, got, udata);                         \
+    if (!eq) {                                                          \
+        if (type_info->print != NULL) {                                 \
+            fprintf(GREATEST_STDOUT, "Expected: ");                     \
+            (void)type_info->print(exp, udata);                         \
+            fprintf(GREATEST_STDOUT, "\nGot: ");                        \
+            (void)type_info->print(got, udata);                         \
+            fprintf(GREATEST_STDOUT, "\n");                             \
+        } else {                                                        \
+            fprintf(GREATEST_STDOUT,                                    \
+                "GREATEST_ASSERT_EQUAL_T failure at %s:%dn",            \
+                greatest_info.fail_file,                                \
+                greatest_info.fail_line);                               \
+        }                                                               \
+    }                                                                   \
+    return eq;                                                          \
 }                                                                       \
                                                                         \
 void greatest_usage(const char *name) {                                 \
@@ -496,6 +547,22 @@ void GREATEST_SET_TEARDOWN_CB(greatest_teardown_cb *cb,                 \
     greatest_info.teardown_udata = udata;                               \
 }                                                                       \
                                                                         \
+static int greatest_string_equal_cb(const void *exp, const void *got,   \
+    void *udata) {                                                      \
+    (void)udata;                                                        \
+    return (0 == strcmp((const char *)exp, (const char *)got));         \
+}                                                                       \
+                                                                        \
+static int greatest_string_printf_cb(const void *t, void *udata) {      \
+    (void)udata;                                                        \
+    return fprintf(GREATEST_STDOUT, "%s", (const char *)t);             \
+}                                                                       \
+                                                                        \
+greatest_type_info greatest_type_info_string = {                        \
+    greatest_string_equal_cb,                                           \
+    greatest_string_printf_cb,                                          \
+};                                                                      \
+                                                                        \
 greatest_run_info greatest_info
 
 /* Handle command-line arguments, etc. */
@@ -503,9 +570,7 @@ greatest_run_info greatest_info
     do {                                                                \
         int i = 0;                                                      \
         memset(&greatest_info, 0, sizeof(greatest_info));               \
-        if (greatest_info.width == 0) {                                 \
-            greatest_info.width = GREATEST_DEFAULT_WIDTH;               \
-        }                                                               \
+        greatest_info.width = GREATEST_DEFAULT_WIDTH;                   \
         for (i = 1; i < argc; i++) {                                    \
             if (0 == strcmp("-t", argv[i])) {                           \
                 if (argc <= i + 1) {                                    \
@@ -540,6 +605,8 @@ greatest_run_info greatest_info
     } while (0);                                                        \
     GREATEST_SET_TIME(greatest_info.begin)
 
+/* Report passes, failures, skipped tests, the number of
+ * assertions, and the overall run time. */
 #define GREATEST_MAIN_END()                                             \
     do {                                                                \
         if (!GREATEST_LIST_ONLY()) {                                    \
@@ -548,7 +615,8 @@ greatest_run_info greatest_info
                 "\nTotal: %u tests", greatest_info.tests_run);          \
             GREATEST_CLOCK_DIFF(greatest_info.begin,                    \
                 greatest_info.end);                                     \
-            fprintf(GREATEST_STDOUT, "\n");                             \
+            fprintf(GREATEST_STDOUT, ", %u assertions\n",               \
+                greatest_info.assertions);                              \
             fprintf(GREATEST_STDOUT,                                    \
                 "Pass: %u, fail: %u, skip: %u.\n",                      \
                 greatest_info.passed,                                   \
@@ -570,9 +638,11 @@ greatest_run_info greatest_info
 #define ASSERTm        GREATEST_ASSERTm
 #define ASSERT_FALSE   GREATEST_ASSERT_FALSE
 #define ASSERT_EQ      GREATEST_ASSERT_EQ
+#define ASSERT_EQUAL_T GREATEST_ASSERT_EQUAL_T
 #define ASSERT_STR_EQ  GREATEST_ASSERT_STR_EQ
 #define ASSERT_FALSEm  GREATEST_ASSERT_FALSEm
 #define ASSERT_EQm     GREATEST_ASSERT_EQm
+#define ASSERT_EQUAL_Tm GREATEST_ASSERT_EQUAL_Tm
 #define ASSERT_STR_EQm GREATEST_ASSERT_STR_EQm
 #define PASS           GREATEST_PASS
 #define FAIL           GREATEST_FAIL
