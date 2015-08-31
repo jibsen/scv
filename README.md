@@ -35,7 +35,7 @@ Example
 Here is an example that reads integer coordinates in the form `x,y`
 into a `scv_vector` and prints them in lexicographical order:
 
-```c
+~~~c
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -83,7 +83,7 @@ int main(void)
 
 	return 0;
 }
-```
+~~~
 
 
 Details
@@ -104,13 +104,13 @@ Pointers into the memory used to hold the elements of a `scv_vector`, will be
 valid until a function causes a reallocation. If you know the element type,
 and speed is important, you can use pointers to access the elements directly:
 
-```c
+~~~c
 	/* v is a scv_vector of int, get a pointer to it's data */
 	int *p = scv_data(v);
 
 	/* we can access the elements of v using p */
 	p[5] = 42;
-```
+~~~
 
 scv uses `malloc()` for memory allocation, which works well in many cases,
-but if needed, you can improve performance by using a custom allocator.
+but if needed, you could improve performance by using a custom allocator.
