@@ -25,8 +25,26 @@ available under the [Apache License](LICENSE).
 Usage
 -----
 
-The include file, [scv.h](scv.h), contains documentation in the form of
-doxygen style comments for all functions.
+The include file `scv.h` contains documentation in the form of [doxygen][]
+comments. A configuration file is included, so you can simply run `doxygen`
+to generate documentation in HTML format.
+
+scv uses [CMake][] to generate build systems. To create one for the tools on
+your platform, and build scv, use something along the lines of:
+
+~~~sh
+mkdir build
+cd build
+cmake ..
+cmake --build .
+~~~
+
+You can also simply compile the source files and link them into your project.
+CMake just provides an easy way to build and test across various platforms and
+toolsets.
+
+[doxygen]: http://www.doxygen.org/
+[CMake]: http://www.cmake.org/
 
 
 Example
