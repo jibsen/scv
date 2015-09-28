@@ -683,10 +683,10 @@ TEST assign_growing_capacity(void)
 	const int data1[] = { -1, -1, -1 };
 	int data2[50];
 	int res;
-	int i;
+	size_t i;
 
 	for (i = 0; i < ARRAY_SIZE(data2); ++i) {
-		data2[i] = i;
+		data2[i] = (int) i;
 	}
 
 	v = scv_new(sizeof(int), 25);
@@ -1066,10 +1066,10 @@ TEST replace_growing_capacity(void)
 	const int data1[] = { 45, 46, 47, 48, 49 };
 	int data2[45];
 	int res;
-	int i;
+	size_t i;
 
 	for (i = 0; i < ARRAY_SIZE(data2); ++i) {
-		data2[i] = i;
+		data2[i] = (int) i;
 	}
 
 	v = scv_new(sizeof(int), 25);
@@ -1296,10 +1296,10 @@ TEST insert_growing_capacity(void)
 	const int data1[] = { 45, 46, 47, 48, 49 };
 	int data2[45];
 	int res;
-	int i;
+	size_t i;
 
 	for (i = 0; i < ARRAY_SIZE(data2); ++i) {
-		data2[i] = i;
+		data2[i] = (int) i;
 	}
 
 	v = scv_new(sizeof(int), 25);
