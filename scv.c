@@ -25,7 +25,7 @@
 #include "scv.h"
 
 /**
- * Returns a pointer to element number `i` of `v`, without error checking.
+ * Return a pointer to element number `i` of `v`, without error checking.
  *
  * @param v pointer to `scv_vector`
  * @param i index
@@ -39,7 +39,7 @@
 #define SCV_MIN_ALLOC (64u)
 
 /**
- * Grows the capacity of `v` to at least `capacity`.
+ * Grow the capacity of `v` to at least `capacity`.
  *
  * If more space is needed, grow `v` to `capacity`, but at least by a factor
  * of 1.5.
@@ -66,7 +66,7 @@ static int scv_i_grow(struct scv_vector *v, size_t capacity)
 		return SCV_ERANGE;
 	}
 
-	/* growth factor 2 for small vectors, 1.5 for larger */
+	/* Growth factor 2 for small vectors, 1.5 for larger */
 	if (v->capacity < 4096 / v->objsize) {
 		newcapacity = v->capacity + v->capacity + 1;
 	}
@@ -108,7 +108,7 @@ struct scv_vector *scv_new(size_t objsize, size_t capacity)
 		return NULL;
 	}
 
-	/* minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
+	/* Minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
 	if (capacity * objsize < SCV_MIN_ALLOC) {
 		capacity = (SCV_MIN_ALLOC + (objsize - 1)) / objsize;
 	}
@@ -271,7 +271,7 @@ int scv_shrink_to_fit(struct scv_vector *v)
 	assert(v->objsize > 0);
 	assert(newcapacity < (size_t) -1 / v->objsize);
 
-	/* minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
+	/* Minimum capacity is SCV_MIN_ALLOC bytes or 1 element */
 	if (newcapacity * v->objsize < SCV_MIN_ALLOC) {
 		newcapacity = (SCV_MIN_ALLOC + (v->objsize - 1)) / v->objsize;
 	}
