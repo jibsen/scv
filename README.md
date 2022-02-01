@@ -25,10 +25,13 @@ Usage
 -----
 
 The include file `scv.h` contains documentation in the form of [doxygen][]
-comments. A configuration file is included, so you can simply run `doxygen`
-to generate documentation in HTML format.
+comments. A configuration file is included, run `doxygen` to generate
+documentation in HTML format.
 
-scv uses [CMake][] to generate build systems. To create one for the tools on
+You can add the source files `scv.c` and `scv.h` to your own projects.
+
+For CI, scv uses [CMake][] to provide an easy way to build and test across
+various platforms and toolsets. To create a build system for the tools on
 your platform, and build scv, use something along the lines of:
 
 ~~~sh
@@ -37,10 +40,6 @@ cd build
 cmake ..
 cmake --build .
 ~~~
-
-You can also simply compile the source files and link them into your project.
-CMake just provides an easy way to build and test across various platforms and
-toolsets.
 
 [doxygen]: http://www.doxygen.org/
 [CMake]: http://www.cmake.org/
