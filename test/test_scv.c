@@ -1526,6 +1526,8 @@ TEST push_back_empty(void)
 	ASSERT(res == SCV_OK && scv_size(v) == 1);
 	ASSERT(check_int_vector(v));
 
+	scv_delete(v);
+
 	PASS();
 }
 
@@ -1605,6 +1607,8 @@ TEST pop_back_empty(void)
 	res = scv_pop_back(v);
 
 	ASSERT(res != SCV_OK && scv_size(v) == 0);
+
+	scv_delete(v);
 
 	PASS();
 }
