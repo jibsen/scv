@@ -6,8 +6,7 @@ Copyright 2003-2014 Joergen Ibsen
 
 <http://www.ibsensoftware.com/>
 
-[![Build Status](https://travis-ci.org/jibsen/scv.png?branch=master)](https://travis-ci.org/jibsen/scv) [![codecov.io](http://codecov.io/github/jibsen/scv/coverage.svg?branch=master)](http://codecov.io/github/jibsen/scv?branch=master)
-
+[![scv CI](https://github.com/jibsen/scv/actions/workflows/scv-ci-workflow.yaml/badge.svg)](https://github.com/jibsen/scv/actions) [![codecov](https://codecov.io/gh/jibsen/scv/branch/master/graph/badge.svg)](https://codecov.io/gh/jibsen/scv)
 
 About
 -----
