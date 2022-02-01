@@ -4,16 +4,9 @@ compiler: gcc
 
 sudo: false
 
-before_install:
-  - pip install --user codecov
-
 before_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_COVERAGE=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 script: cmake --build . && ctest -V .
-
-after_success:
-  - gcov CMakeFiles/scv.dir/scv.c.gcno -o CMakeFiles/scv.dir
-  - codecov -X gcov
