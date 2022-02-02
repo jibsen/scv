@@ -1,8 +1,14 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.16)
 
 project(scv C)
 
 include(CTest)
+
+if(MSVC)
+  add_compile_options(/W3)
+else()
+  add_compile_options(-Wall -Wextra -pedantic)
+endif()
 
 add_library(scv scv.c scv.h)
 target_include_directories(scv PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>)
